@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="normal_space">10dp</dimen>
+    <dimen name="pad_space">5dp</dimen>
+    <dimen name="small_space">2dp</dimen>
+    <dimen name="medium_space">5dp</dimen>
+    <dimen name="big_space">14dp</dimen>
+    <dimen name="screen_max_width">100dp</dimen>
+    <dimen name="small_text">12sp</dimen>
+    <dimen name="huge_space">20dp</dimen>
+</resources>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="fader"
+            type="top.yudoge.vpad.pojo.Fader" />
+        <import
+            type="top.yudoge.vpad.pojo.FaderMode" />
+    </data>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:gravity="center"
+        tools:layout_width="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/track_mode_buttons"
+            visiableOrGone="@{fader.mode == FaderMode.Track}"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ToggleButton
+                android:id="@+id/mute"
+                android:layout_weight="1"
+                android:textOff="M"
+                android:textOn="M"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ToggleButton
+                android:id="@+id/solo"
+                android:layout_weight="1"
+                android:textOff="S"
+                android:textOn="S"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@id/track_mode_buttons"
+            visiableOrGone="@{fader.mode == FaderMode.Track}"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ToggleButton
+                android:id="@+id/record"
+                android:layout_weight="1"
+                android:textOff="Rec"
+                android:textOn="Rec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/cc_mode_buttons"
+            visiableOrGone="@{fader.mode == FaderMode.CC}"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:text="Set"
+                android:id="@+id/set_cc"
+                android:background="@android:color/transparent"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+        <top.yudoge.vpad.view.VerticalSeekBar
+            android:id="@+id/fader_bar"
+            android:thumb="@drawable/fader_logic"
+            android:layout_weight="1"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/tag"
+            tools:text="Track 1"
+            android:text="@{fader.label}"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/medium_space"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</layout>

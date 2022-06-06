@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/chooseVpadServerFragment">
+
+    <fragment
+        android:id="@+id/chooseVpadServerFragment"
+        android:name="top.yudoge.vpad.ui.ChooseVpadServerFragment"
+        android:label="ChooseVpadServerFragment" >
+        <action
+            android:id="@+id/action_chooseVpadServerFragment_to_padFragment"
+            app:destination="@id/padFragment" />
+        <action
+            android:id="@+id/action_chooseVpadServerFragment_to_faderFragment"
+            app:destination="@id/faderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/padFragment"
+        android:name="top.yudoge.vpad.ui.PadFragment"
+        android:label="PadFragment" >
+        <argument
+            android:name="vpadServer"
+            app:argType="top.yudoge.vpadapi.VPadServer" />
+        <action
+            android:id="@+id/action_padFragment_to_padSettingFragment"
+            app:destination="@id/padSettingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/padSettingFragment"
+        android:name="top.yudoge.vpad.ui.PadSettingFragment"
+        android:label="PadSettingFragment" >
+        <argument
+            android:name="padId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/faderFragment"
+        android:name="top.yudoge.vpad.ui.FaderFragment"
+        android:label="FaderFragment" >
+        <argument
+            android:name="vPadServer"
+            app:argType="top.yudoge.vpadapi.VPadServer" />
+    </fragment>
+</navigation>

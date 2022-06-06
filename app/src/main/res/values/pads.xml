@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pad_mode_entries">
+        <item>@string/pad_normal_mode</item>
+        <item>@string/repeat_mode</item>
+        <item>@string/arp_mode</item>
+        <item>@string/chord_mode</item>
+    </string-array>
+    <integer-array name="pad_mode_entrie_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </integer-array>
+</resources>

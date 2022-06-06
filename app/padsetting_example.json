@@ -1,0 +1,11 @@
+[
+  {
+    "type": 2,
+    "velocity": 80,
+    "type_setting": {
+      "method": 0,
+      "rate": 0
+    }
+  },
+  //  other 15 object...对于配置项的存储，使用Room有些笨重而且有很多限制。
+]

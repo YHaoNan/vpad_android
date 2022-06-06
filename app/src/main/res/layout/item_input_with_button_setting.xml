@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/setting_body"
+    android:clickable="true"
+    android:background="?android:attr/selectableItemBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="@dimen/big_space"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <include
+        android:layout_weight="1"
+        layout="@layout/item_setting_title_and_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:padding="@dimen/small_space"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/setting_neg_step_2"
+            android:text="-10"
+            android:padding="0dp"
+            android:layout_marginRight="@dimen/medium_space"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/setting_neg_step_1"
+            android:text="-1"
+            android:padding="0dp"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/setting_preview"
+            tools:text="value"
+            android:layout_marginLeft="@dimen/normal_space"
+            android:layout_marginRight="@dimen/normal_space"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/setting_posi_step_1"
+            android:text="+1"
+            android:padding="0dp"
+            android:layout_marginRight="@dimen/medium_space"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/setting_posi_step_2"
+            android:text="+10"
+            android:padding="0dp"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>

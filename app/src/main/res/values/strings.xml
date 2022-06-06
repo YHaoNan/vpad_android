@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">VPad</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pad_basic_setting">Pad基本设置</string>
+    <string name="pad_mode">Pad模式</string>
+    <string name="pad_normal_mode">Pad模式</string>
+    <string name="repeat_mode">Repeat模式</string>
+    <string name="arp_mode">Arp模式</string>
+    <string name="chord_mode">和弦模式</string>
+    <string name="pad_mode_preference_summary">设置Pad触发时的模式</string>
+    <string name="pad_setting">Pad设置</string>
+    <string name="sure">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="track_mode">TrackMode</string>
+    <string name="cc_mode">CCMode</string>
+    <string name="master_track">Master</string>
+</resources>

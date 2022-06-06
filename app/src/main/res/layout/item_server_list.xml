@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="vpadServer"
+            type="top.yudoge.vpadapi.VPadServer" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:padding="@dimen/normal_space"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="@{vpadServer.name}"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="DEFAULT NAME"/>
+        <TextView
+            android:layout_marginTop="@dimen/medium_space"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:text="@{vpadServer.label()}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="DEFAULT LABEL"/>
+    </LinearLayout>
+</layout>

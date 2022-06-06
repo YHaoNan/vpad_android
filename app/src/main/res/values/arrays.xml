@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="preview_list_item">
+        <item>apple</item>
+        <item>banana</item>
+        <item>orange</item>
+    </string-array>
+</resources>
