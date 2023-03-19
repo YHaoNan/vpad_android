@@ -59,7 +59,7 @@ class PadViewModel @Inject constructor(
             }
             PadMode.Chord -> {
                 subSetting as ChordModeSetting
-                return MidiMessage(note, padSetting.velocity, state)
+                return ChordMessage(note, padSetting.velocity, state, bpm, subSetting.type.ordinal, subSetting.level.ordinal, subSetting.transpose, subSetting.arpPct)
             }
         }
     }

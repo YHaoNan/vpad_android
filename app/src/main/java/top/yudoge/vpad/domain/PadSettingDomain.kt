@@ -51,7 +51,7 @@ class PadSettingDomain @Inject constructor(
                     PadMode.Pad -> PadModeSetting()
                 })
             }
-            ARP_METHOD, ARP_RATE, ARP_SWING_PCT, ARP_UP_NOTE_CNT, ARP_DYNAMIC_PCT, ARP_VELOCITY_AUTOMATION, CHORD_TYPE, CHORD_LEVEL, CHORD_ARP_PCT-> {
+            ARP_METHOD, ARP_RATE, ARP_SWING_PCT, ARP_UP_NOTE_CNT, ARP_DYNAMIC_PCT, ARP_VELOCITY_AUTOMATION, CHORD_TYPE, CHORD_LEVEL, CHORD_ARP_PCT, CHORD_TRANSPOSE-> {
                 val subSettingJo = jo.getAsJsonObject("specificModeSetting")
                 when(settingItem.id) {
                     ARP_METHOD -> subSettingJo.replace("method", ArpMethod.valueOf(settingItem.selectedValue()))
@@ -63,6 +63,7 @@ class PadSettingDomain @Inject constructor(
                     CHORD_LEVEL -> subSettingJo.replace("level", ChordLevel.valueOf(settingItem.selectedValue()))
                     CHORD_TYPE -> subSettingJo.replace("type", ChordType.valueOf(settingItem.selectedValue()))
                     CHORD_ARP_PCT -> subSettingJo.replace("arpPct", settingItem.inputValue().toString())
+                    CHORD_TRANSPOSE -> subSettingJo.replace("transpose", settingItem.inputValue().toInt())
                 }
                 jo.replace("specificModeSetting", subSettingJo)
             }
@@ -104,6 +105,7 @@ class PadSettingDomain @Inject constructor(
                         add(subSetting.type.asSelectItem(CHORD_TYPE, "和弦类别", null))
                         add(subSetting.level.asSelectItem(CHORD_LEVEL, "和弦级数", null))
                         add(subSetting.arpPct.asInputAndButtonItem(CHORD_ARP_PCT, "琶音程度", "控制和弦中不同音的起始延迟", "0~100"))
+                        add(subSetting.transpose.asInputItem(CHORD_TRANSPOSE, "和弦转置", "控制和弦的转置", ""))
                     }
                 }
             }
@@ -122,6 +124,7 @@ class PadSettingDomain @Inject constructor(
         private const val CHORD_TYPE = 8
         private const val CHORD_LEVEL = 9
         private const val CHORD_ARP_PCT = 10
+        private const val CHORD_TRANSPOSE = 11
         const val TAG = "PadSettingDomain"
 
     }

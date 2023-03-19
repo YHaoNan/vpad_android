@@ -21,10 +21,12 @@ import top.yudoge.vpad.api.VPadServerCommunicator
 import top.yudoge.vpad.api.VPadServerScannedListener
 import top.yudoge.vpad.api.VirtualVPadServer
 import top.yudoge.vpad.databinding.FragmentChooseVpadServerBinding
+import top.yudoge.vpad.toplevel.showListDialog
 import top.yudoge.vpad.viewmodel.ChooseVpadServerFragmentViewModel
 import top.yudoge.vpad.viewmodel.MainViewModel
 import top.yudoge.vpadapi.VPadClient
 import top.yudoge.vpadapi.VPadServer
+import java.net.NetworkInterface
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -72,19 +74,12 @@ class ChooseVpadServerFragment : Fragment() {
         adapter = ServerListAdapter { serverMode, vPadServer ->
             val oldCommunicator = activityViewModel.getCommunicator()
             if (oldCommunicator != null) {
-                // 只有当之前的communicator的目标和当前的不同时才有动作
-                if (!oldCommunicator.targetIs(vPadServer)) {
-                    Log.i(TAG, "Replace communicator")
-                    lifecycleScope.launch {
-                        oldCommunicator.close()
-                        activity!!.lifecycle.removeObserver(oldCommunicator)
-                        initCommunicator(vPadServer)
-                    }
-                } else {
-                    Log.i(TAG, "Reuse last communicator")
+                lifecycleScope.launch {
+                    oldCommunicator.close();
+                    activity!!.lifecycle.removeObserver(oldCommunicator)
+                    initCommunicator(vPadServer)
                 }
             } else {
-                Log.i(TAG, "First init communicator")
                 initCommunicator(vPadServer)
             }
             navigateByServerMode(serverMode, vPadServer)
@@ -93,11 +88,12 @@ class ChooseVpadServerFragment : Fragment() {
         binding.serverList.adapter = adapter
 
         swipeRefresher = binding.swipeRefresher
-        swipeRefresher.setOnRefreshListener {
-            viewModel.scanVPadServer(viewLifecycleOwner, onServerScannedListener)
+        context?.showListDialog("选择网络接口", NetworkInterface.getNetworkInterfaces().toList(), NetworkInterface::getDisplayName) { iface ->
+            swipeRefresher.setOnRefreshListener {
+                viewModel.scanVPadServer(viewLifecycleOwner, onServerScannedListener, iface)
+            }
+            viewModel.scanVPadServer(viewLifecycleOwner, onServerScannedListener, iface)
         }
-        viewModel.scanVPadServer(viewLifecycleOwner, onServerScannedListener)
-
         return binding.root
     }
 

@@ -67,6 +67,7 @@ class RepeatModeSetting(
 class ChordModeSetting(
     val type: ChordType = ChordType.MAJOR,
     val level: ChordLevel = ChordLevel.L_7,
+    val transpose: Int = 0,
     val arpPct: Int = 10
 ) : SpecificModeSetting(
     PadMode.Chord
@@ -77,7 +78,7 @@ class ChordModeSetting(
     }
 
     override fun toString(): String {
-        return "ChordModeSetting(type=$type, level=$level, arpPct=$arpPct)"
+        return "ChordModeSetting(type=$type, level=$level, transpose=$transpose, arpPct=$arpPct)"
     }
 
 }

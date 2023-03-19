@@ -18,6 +18,11 @@ import java.io.File
 
 import android.content.Intent
 import android.net.Uri
+import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
+import android.widget.ArrayAdapter
+import android.widget.ListView
 
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -43,6 +48,20 @@ inline fun Context.showInputDialog(title: String, value: String?, hint: String?,
         })
         .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { dialogInterface, i -> }).show()
 
+}
+
+inline fun <T> Context.showListDialog(title: String, list: List<T>, map: (T)->String, crossinline callback: (T) -> Unit) {
+    val dialog = AlertDialog.Builder(this);
+    val adapter = ArrayAdapter<String>(this@showListDialog, android.R.layout.simple_list_item_1, list.map(map));
+    dialog
+        .setView(ListView(this))
+        .setTitle(title)
+        .setCancelable(false)
+        .setSingleChoiceItems(adapter, 0) {dialog, which ->
+            callback(list.get(which))
+            dialog.dismiss();
+        }
+    dialog.show()
 }
 
 fun Context.alert(

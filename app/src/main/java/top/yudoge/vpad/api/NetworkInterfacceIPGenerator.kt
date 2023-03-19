@@ -42,26 +42,22 @@ class NetworkInterfacceIPGenerator : LANIPGenerator {
         return fromByteToInt4(endIPAddress, 0)
     }
 
-    override fun getIPList(): Iterable<String> {
+    override fun getIPList(iface: NetworkInterface): Iterable<String> {
         val ipList = mutableListOf<String>()
-        NetworkInterface.getNetworkInterfaces().asSequence().forEach { iface ->
+        iface.interfaceAddresses.forEach { ifaceAddr ->
+            val addressByteArray = ifaceAddr.address.address
             // Hardcode
-            if (iface.isLoopback || !iface.displayName.startsWith("wlan")) return@forEach
-            iface.interfaceAddresses.forEach { ifaceAddr ->
-                val addressByteArray = ifaceAddr.address.address
-                // Hardcode
-                if (addressByteArray.size != 4) return@forEach
+            if (addressByteArray.size != 4) return@forEach
 
-                // Iface name starts with 'wlan' and use ipv4
-                val prefixLength = ifaceAddr.networkPrefixLength // 24
+            // Iface name starts with 'wlan' and use ipv4
+            val prefixLength = ifaceAddr.networkPrefixLength // 24
 
-                val startIpAddress = getMinAddress(addressByteArray, prefixLength)
-                val endIpAddress = getMaxAddress(addressByteArray, prefixLength)
-                (if (startIpAddress > endIpAddress) (endIpAddress ..startIpAddress - 1) else (startIpAddress ..endIpAddress - 1)).forEach {
-                    val ipByteArray = fromInt4ToByte(it)
-                    val ipString = Inet4Address.getByAddress(ipByteArray).hostName
-                    ipList.add(ipString)
-                }
+            val startIpAddress = getMinAddress(addressByteArray, prefixLength)
+            val endIpAddress = getMaxAddress(addressByteArray, prefixLength)
+            (if (startIpAddress > endIpAddress) (endIpAddress ..startIpAddress - 1) else (startIpAddress ..endIpAddress - 1)).forEach {
+                val ipByteArray = fromInt4ToByte(it)
+                val ipString = Inet4Address.getByAddress(ipByteArray).hostName
+                ipList.add(ipString)
             }
         }
         return ipList

@@ -30,7 +30,8 @@ class VPadServerScanner(
     // Not correct...
     suspend fun scanVPadServer(
         lifecycleOwner: LifecycleOwner,
-        serverScannedListener: VPadServerScannedListener
+        serverScannedListener: VPadServerScannedListener,
+        iface: NetworkInterface
     ) {
         var scanJob: Job? = null
         lifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
@@ -44,7 +45,7 @@ class VPadServerScanner(
             scanJob = launch {
                 // notify scan has started
                 withContext(Dispatchers.Main) { serverScannedListener.onScanStarted() }
-                lanipGenerator.getIPList().forEach { ipAddress ->
+                lanipGenerator.getIPList(iface).forEach { ipAddress ->
                     if (!isActive) {
                         Log.v(TAG, "scan task has cancelled")
                         throw CancellationException("scan task has cancelled")

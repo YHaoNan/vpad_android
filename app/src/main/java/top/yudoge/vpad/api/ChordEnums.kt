@@ -1,7 +1,7 @@
 package top.yudoge.vpad.api
 
 enum class ChordType {
-    MINOR,MAJOR
+    MAJOR, MINOR, DOM, AUG, DIM, SUS2, SUS4, ADD6, ADD9
 }
 
 enum class ChordLevel {

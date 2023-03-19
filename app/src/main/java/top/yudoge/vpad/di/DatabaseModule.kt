@@ -7,7 +7,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import top.yudoge.vpad.db.VPadDatabase
-import top.yudoge.vpad.db.dao.*
 import javax.inject.Singleton
 
 @Module

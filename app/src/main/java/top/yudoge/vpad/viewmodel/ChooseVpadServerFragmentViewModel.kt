@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import top.yudoge.vpad.api.VPadServerScannedListener
 import top.yudoge.vpad.api.VPadServerScanner
+import java.net.NetworkInterface
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,9 +15,9 @@ class ChooseVpadServerFragmentViewModel @Inject constructor(
     private val vPadServerScanner: VPadServerScanner
 ) : ViewModel() {
 
-    fun scanVPadServer(lifecycleOwner: LifecycleOwner, serverScannedListener: VPadServerScannedListener) =
+    fun scanVPadServer(lifecycleOwner: LifecycleOwner, serverScannedListener: VPadServerScannedListener, iface: NetworkInterface) =
         viewModelScope.launch {
-            vPadServerScanner.scanVPadServer(lifecycleOwner, serverScannedListener)
+            vPadServerScanner.scanVPadServer(lifecycleOwner, serverScannedListener, iface)
         }
 
 }
