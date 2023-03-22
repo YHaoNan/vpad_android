@@ -69,6 +69,7 @@ class ChooseVpadServerFragment : Fragment() {
         // 竖屏
         activity?.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+
         val binding = FragmentChooseVpadServerBinding.inflate(inflater, container, false)
 
         adapter = ServerListAdapter { serverMode, vPadServer ->

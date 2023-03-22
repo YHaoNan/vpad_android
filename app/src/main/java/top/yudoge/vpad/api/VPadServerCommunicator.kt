@@ -32,6 +32,7 @@ class VPadServerCommunicator constructor(
         communicatorHolder.canConnectNow()
     }
 
+
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
         communicatorHolder.mustDisconnect()
@@ -46,7 +47,6 @@ class VPadServerCommunicator constructor(
     }
 
     suspend fun sendMessageToServer(message: Message) {
-        Log.i("VSComm", this.hashCode().toString() + ", " + vpadConnection)
         withContext(Dispatchers.IO) {
             vpadConnection?.sendMessage(message)
         }

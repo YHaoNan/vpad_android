@@ -49,8 +49,6 @@ class MainViewModel @Inject constructor(): ViewModel(), CommunicatorHolder {
         }
     }
 
-
-
     override fun mustDisconnect() {
         if (communicator == null) throw IllegalStateException("mustDisconnect must call via `VPadCommunicator`")
         viewModelScope.launch(coroutineExceptionHandler) {

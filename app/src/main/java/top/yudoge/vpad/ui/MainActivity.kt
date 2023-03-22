@@ -2,6 +2,7 @@ package top.yudoge.vpad.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -88,6 +89,11 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    // Prevent destroy on orientation changed
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
     }
 
 }
