@@ -7,6 +7,7 @@ object Constants {
     const val DB_NAME = "vpad_db"
     const val DEFAULT_PAD_SETTING_FILE_NAME = "default_pad_setting.json"
     const val DEFAULT_BPM: Int = 130
+    const val DEFAULT_BASE: Int = 35
 
     val DEFAULT_TRACK_FADERS = lazy {
         listOf(

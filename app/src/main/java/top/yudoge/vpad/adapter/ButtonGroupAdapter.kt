@@ -64,7 +64,6 @@ class ButtonGroupAdapter(
 
             if (buttonLabel.label.equals("BPM")) {
                 padViewModel.bpm.observe(lifecycleOwner) {
-                    Log.i(TAG, "bpm updating to ${it}")
                     binding.subTitle = it.toString()
                     bpm = it
                 }

@@ -1,7 +1,6 @@
 package top.yudoge.vpad.repository
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -25,13 +24,17 @@ class SettingRepository @Inject constructor(
 
     val padSettings: Flow<String> = context.dataStore.data
         .map {
-            Log.i(TAG, "padsetting getted")
             it[PAD_SETTING_KEY] ?: defaultPadSetting
         }
 
     val bpm: Flow<Int> = context.dataStore.data
         .map {
             it[BPM_KEY] ?: Constants.DEFAULT_BPM
+        }
+
+    val baseNote: Flow<Int> = context.dataStore.data
+        .map {
+            it[BASE_NOTE_KEY] ?: Constants.DEFAULT_BASE
         }
 
     /**
@@ -52,9 +55,27 @@ class SettingRepository @Inject constructor(
         }
     }
 
+    /**
+     * 基于BaseNote为第一个打击垫，其最后一个打击垫必须不能大于127，第一个打击垫必定不能小于0
+     */
+    suspend fun increaseBaseNote(incr: Int): Boolean {
+        var result = true
+        context.dataStore.edit {
+            val curr = it[BASE_NOTE_KEY] ?: Constants.DEFAULT_BASE
+            val next = curr + incr
+            if (next + 15 > 127 || next < 0) {
+                result = false;
+                return@edit
+            }
+            it[BASE_NOTE_KEY] = curr + incr
+        }
+        return result
+    }
+
     companion object {
         private val PAD_SETTING_KEY = stringPreferencesKey("pad_setting_json")
         private val BPM_KEY = intPreferencesKey("bpm")
+        private val BASE_NOTE_KEY = intPreferencesKey("base_note")
         const val TAG = "SettingRepository"
     }
 }

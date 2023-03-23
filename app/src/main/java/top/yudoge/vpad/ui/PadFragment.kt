@@ -18,6 +18,7 @@ import top.yudoge.vpad.databinding.FragmentPadBinding
 import top.yudoge.vpad.di.Pixel
 import top.yudoge.vpad.padtheme.AKaiMPD218PadThemeInitializer
 import top.yudoge.vpad.pojo.ButtonLabel
+import top.yudoge.vpad.toplevel.Constants
 import top.yudoge.vpad.toplevel.alert
 import top.yudoge.vpad.toplevel.setOnWheelStateChangeListener
 import top.yudoge.vpad.toplevel.showInputDialog
@@ -38,6 +39,8 @@ class PadFragment : Fragment() {
     private val activityViewModel: MainViewModel by activityViewModels()
     private lateinit var binding: FragmentPadBinding
     lateinit var buttonGroupAdapter: ButtonGroupAdapter
+
+    private var baseNote = Constants.DEFAULT_BASE;
 
     @Inject @Pixel lateinit var pixelTypeface: Typeface
 
@@ -85,6 +88,7 @@ class PadFragment : Fragment() {
         // 因为之前有考虑过添加调制轮的功能，所以抽取了WheelStateChangeListener
         binding.wheel.setOnWheelStateChangeListener(PitchWheelWheelStateChangeListener(activityViewModel))
 
+        padViewModel.baseNote.observe(viewLifecycleOwner) {it -> baseNote = it}
         padViewModel.padSettings.observe(viewLifecycleOwner) { padSettings ->
             binding.padContainer.adapter = PadContainerAdapter(AKaiMPD218PadThemeInitializer()) { padId, state ->
                 if (padViewModel.settingMode) {
@@ -97,7 +101,7 @@ class PadFragment : Fragment() {
                 } else {
                     // send midi message
                     activityViewModel.sendMessageToServer(
-                        padViewModel.getMessageByPadState(padId, state, padSettings[padId - 1], buttonGroupAdapter.getBpm())
+                        padViewModel.getMessageByPadState(padId, state, padSettings[padId - 1], buttonGroupAdapter.getBpm(), baseNote)
                     )
                 }
             }

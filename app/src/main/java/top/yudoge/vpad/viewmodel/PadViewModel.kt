@@ -1,11 +1,13 @@
 package top.yudoge.vpad.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import top.yudoge.vpad.api.*
 import top.yudoge.vpad.domain.PadSettingDomain
 import top.yudoge.vpad.repository.SettingRepository
+import top.yudoge.vpadapi.Constants
 import top.yudoge.vpadapi.VPadServer
 import top.yudoge.vpadapi.structure.*
 import javax.inject.Inject
@@ -34,18 +36,18 @@ class PadViewModel @Inject constructor(
     val padSettings: LiveData<List<PadSetting>> = padSettingDomain.padSettings
     private var _settingMode = false
     val settingMode by ::_settingMode
-
-    private var _noteOffset = 35
-    val noteOffset by ::_noteOffset
+    val baseNote: LiveData<Int> = settingRepository.baseNote.asLiveData()
 
     fun setBpm(bpm: Int) = viewModelScope.launch {
         settingRepository.updateBpm(bpm)
         _screenMessage.value = "bpm -> ${bpm}"
     }
 
-    fun getMessageByPadState(padId: Int, state: Int, padSetting: PadSetting, bpm: Int) : Message {
-        _screenMessage.value = "Pad ${padId} ${if(state == MidiMessage.STATE_ON) "ON" else "OFF"}, note ${noteOffset + padId} "
-        val note = noteOffset + padId
+    fun getMessageByPadState(padId: Int, state: Int, padSetting: PadSetting, bpm: Int, baseNote: Int) : Message {
+
+        _screenMessage.value = "Pad ${padId} ${if(state == MidiMessage.STATE_ON) "ON" else "OFF"}, note ${baseNote + padId} "
+
+        val note = baseNote + padId
         val subSetting = padSetting.specificModeSetting
         when (padSetting.mode) {
             PadMode.Pad -> return MidiMessage(note, padSetting.velocity, state)
@@ -80,22 +82,19 @@ class PadViewModel @Inject constructor(
     }
 
 
-    fun increaseNoteRegion() {
-        // _noteOffset + 16 是屏幕中的最大note，需要在此基础再加16
-        if (_noteOffset + 16 + 16 < 127){
-            _noteOffset += 16
-            _screenMessage.value = "note region to [${noteOffset + 1}, ${noteOffset + 17}]"
+    fun increaseNoteRegion() = viewModelScope.launch {
+        if (settingRepository.increaseBaseNote(16)) {
+            _screenMessage.value = "Region + 16"
         } else {
-            _screenMessage.value = "can't increase region"
+            _screenMessage.value = "Limited"
         }
     }
 
-    fun decreaseNoteRegion() {
-        if (_noteOffset > 16) {
-            _noteOffset -= 16
-            _screenMessage.value = "note region to [${noteOffset + 1}, ${noteOffset + 17}]"
+    fun decreaseNoteRegion() = viewModelScope.launch {
+        if (settingRepository.increaseBaseNote(-16)) {
+            _screenMessage.value = "Region - 16"
         } else {
-            _screenMessage.value = "can't decrease region"
+            _screenMessage.value = "Limited"
         }
     }
 
