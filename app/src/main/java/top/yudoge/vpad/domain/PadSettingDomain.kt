@@ -4,11 +4,9 @@ import android.text.InputType
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.asLiveData
 import com.google.gson.*
 import top.yudoge.vpad.api.*
 import top.yudoge.vpad.pojo.*
-import top.yudoge.vpad.repository.SettingRepository
 import top.yudoge.vpad.toplevel.gson
 import top.yudoge.vpad.toplevel.names
 import top.yudoge.vpad.view.setting_view.*
@@ -18,12 +16,11 @@ import javax.inject.Singleton
 
 @Singleton
 class PadSettingDomain @Inject constructor(
-    private val settingRepository: SettingRepository
+    private val presetDomain: PresetDomain
 ) {
-    private val padSettingsJson: LiveData<String> = settingRepository.padSettings.asLiveData()
-    val padSettings: LiveData<List<PadSetting>> = Transformations.map(padSettingsJson) { json ->
-        Log.i(TAG, "convertToPadSetting")
-        getPadSettingsFromJson(json)
+
+    val padSettings: LiveData<List<PadSetting>> = Transformations.map(presetDomain.workingPreset) { preset ->
+        preset.padSettings
     }
 
     private fun getPadSettingsFromJson(json: String): List<PadSetting> {
@@ -36,11 +33,18 @@ class PadSettingDomain @Inject constructor(
         }
     }
 
-    suspend fun updatePadSettingItem(padIdStartByZero: Int, settingItem: SettingItem) {
-        val fullJA = JsonParser.parseString(padSettingsJson.value!!).asJsonArray
-        val jo = fullJA[padIdStartByZero].asJsonObject
+    suspend fun updatePadSettingItem(index: Int, settingItem: SettingItem) {
+        val workingPresetJsonString = presetDomain.workingPresetJson.value!!;
+        val fullPresetJO = JsonParser.parseString(workingPresetJsonString).asJsonObject
+        val padSettingJA = fullPresetJO["padSettings"].asJsonArray
+        val jo = padSettingJA[index].asJsonObject
+
+
+
         when(settingItem.id) {
-            VELOCITY -> jo.replace("velocity", settingItem.inputValue().toInt())
+            VELOCITY ->  jo.replace("velocity", settingItem.inputValue().toInt())
+            TITLE ->  jo.replace("title", settingItem.inputValue())
+            OFFSET ->  jo.replace("offset", settingItem.inputValue().toInt())
             MODE -> {
                 val padMode = PadMode.valueOf(settingItem.selectedValue())
                 jo.replace("mode", padMode)
@@ -68,14 +72,20 @@ class PadSettingDomain @Inject constructor(
                 jo.replace("specificModeSetting", subSettingJo)
             }
         }
-        fullJA[padIdStartByZero] = jo
-        settingRepository.updatePadSetting(gson.toJson(fullJA))
+
+
+        padSettingJA[index] = jo;
+        fullPresetJO.replace("padSettings", padSettingJA)
+        presetDomain.updateWorkingPreset(gson.toJson(fullPresetJO))
+
     }
 
     fun getSettingItems(padIdStartByZero: Int): LiveData<List<SettingItem>> =
         Transformations.map(getPadSetting(padIdStartByZero)) {
             mutableListOf<SettingItem>().apply {
                 add("Pad ${padIdStartByZero + 1} 设置".asDivider())
+                add(it.title.asInputItem(TITLE, "Pad标题", null, "Pad标题"))
+                add(it.offset.asInputItem(OFFSET, "Pad Offset", null, "Pad Offset"))
                 add(it.mode.asSelectItem(MODE, "Pad模式", "Pad触发后的事件模式"))
                 add(it.velocity.asInputItem(VELOCITY, "力度", "Pad按下后的音符力度", "1~127"))
 
@@ -125,6 +135,8 @@ class PadSettingDomain @Inject constructor(
         private const val CHORD_LEVEL = 9
         private const val CHORD_ARP_PCT = 10
         private const val CHORD_TRANSPOSE = 11
+        private const val TITLE = 13
+        private const val OFFSET = 14
         const val TAG = "PadSettingDomain"
 
     }
@@ -134,6 +146,8 @@ class PadSettingDomain @Inject constructor(
         SelectSettingItem(id, title, subTitle, ordinal, enumValues<T>().names())
     private inline fun Int.asInputItem(id: Int = NO_ID, title: String, subTitle: String?, hint: String) =
         InputSettingItem(id, title, subTitle, this.toString(), hint, InputType.TYPE_CLASS_NUMBER)
+    private inline fun String.asInputItem(id: Int = NO_ID, title: String, subTitle: String?, hint: String) =
+        InputSettingItem(id, title, subTitle, this, hint, InputType.TYPE_CLASS_TEXT)
     private inline fun Int.asInputAndButtonItem(id: Int = NO_ID, title: String, subTitle: String?, hint: String, step2Show: Boolean = true) =
         InputAndButtonSettingItem(id, title, subTitle, this.toString(), hint, InputType.TYPE_CLASS_NUMBER, step2Show = step2Show)
     private inline fun SettingItem.inputValue(): String {
@@ -152,4 +166,5 @@ class PadSettingDomain @Inject constructor(
         else if (value is JsonElement) add(name, value)
         else add(name, gson.toJsonTree(value))
     }
+
 }

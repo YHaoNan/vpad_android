@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import top.yudoge.vpad.R
 import top.yudoge.vpad.databinding.ItemPadAkaiMpd218Binding
+import top.yudoge.vpad.pojo.PadSetting
 import top.yudoge.vpadapi.structure.MidiMessage
 
 @SuppressLint("LongLogTag")
@@ -25,25 +26,25 @@ class AKaiMPD218PadThemeInitializer : PadThemeInitializer() {
 
     override fun bindView(
         binding: ViewDataBinding,
-        padId: Int,
-        position: Int,
-        onPadEvent: (padId: Int, midiState: Int) -> Unit
+        padSetting: PadSetting,
+        padPosition: Int,
+        onPadEvent: (padSetting: PadSetting, padIndex: Int, state: Int) -> Unit
     ) {
         binding as ItemPadAkaiMpd218Binding
-        binding.padId = "PAD ${padId}"
+        binding.padTitle = padSetting.title
         binding.pad.setOnTouchListener { view, motionEvent ->
             when(motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
                     binding.pad.setBackgroundResource(R.drawable.bg_akai_mpd_218_pressed)
-                    onPadEvent(padId, MidiMessage.STATE_ON)
+                    onPadEvent(padSetting, padPosition, MidiMessage.STATE_ON)
                 }
                 MotionEvent.ACTION_UP -> {
                     binding.pad.setBackgroundResource(R.drawable.bg_akai_mpd_218_normal)
-                    onPadEvent(padId, MidiMessage.STATE_OFF)
+                    onPadEvent(padSetting, padPosition, MidiMessage.STATE_OFF)
                 }
                 MotionEvent.ACTION_CANCEL -> {
                     binding.pad.setBackgroundResource(R.drawable.bg_akai_mpd_218_normal)
-                    onPadEvent(padId, MidiMessage.STATE_OFF)
+                    onPadEvent(padSetting, padPosition, MidiMessage.STATE_OFF)
                 }
             }
             true

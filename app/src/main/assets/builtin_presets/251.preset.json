@@ -12,6 +12,7 @@
       "mode": "Chord",
       "velocity": "90",
       "specificModeSetting": {
+        "mode": "Chord",
         "chordLevel": 1,
         "chordType": 1
       }
@@ -22,6 +23,7 @@
       "mode": "Chord",
       "velocity": "90",
       "specificModeSetting": {
+        "mode": "Chord",
         "chordLevel": 1,
         "chordType": 0,
         "transpose": 1
@@ -33,6 +35,7 @@
       "mode": "Chord",
       "velocity": "90",
       "specificModeSetting": {
+        "mode": "Chord",
         "chordLevel": 1,
         "chordType": 0
       }

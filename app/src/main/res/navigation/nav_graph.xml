@@ -31,7 +31,7 @@
         android:name="top.yudoge.vpad.ui.PadSettingFragment"
         android:label="PadSettingFragment" >
         <argument
-            android:name="padId"
+            android:name="padPosition"
             app:argType="integer" />
     </fragment>
     <fragment

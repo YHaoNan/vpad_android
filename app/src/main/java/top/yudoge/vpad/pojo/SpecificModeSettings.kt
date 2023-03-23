@@ -1,13 +1,10 @@
-package top.yudoge.vpad.api
+package top.yudoge.vpad.pojo
 
+import top.yudoge.vpad.api.*
 import top.yudoge.vpad.toplevel.requireInRange
 
-abstract class SpecificModeSetting(
-    val mode: PadMode
-)
-class PadModeSetting : SpecificModeSetting(
-    PadMode.Pad
-) {
+abstract class SpecificModeSetting(val mode: PadMode)
+class PadModeSetting : SpecificModeSetting(PadMode.Pad) {
     override fun toString(): String {
         return "PadModeSetting()"
     }
@@ -33,9 +30,7 @@ class ArpModeSetting(
     val upNoteCnt: Int = 4,
     velocityAutomation: ArpVelocityAutomation = ArpVelocityAutomation.UP,
     dynamicPct: Int = 20,
-) : RepeatOrArpModeSetting(
-    rate, swingPct, velocityAutomation, dynamicPct, PadMode.Arp
-) {
+) : RepeatOrArpModeSetting(rate, swingPct, velocityAutomation, dynamicPct, PadMode.Arp) {
 
     init {
         upNoteCnt.requireInRange(1, 8)
@@ -56,7 +51,6 @@ class RepeatModeSetting(
 ) : RepeatOrArpModeSetting(
     rate, swingPct, velocityAutomation, dynamicPct, PadMode.Repeat
 ) {
-
     override fun toString(): String {
         return "RepeatModeSetting(rate=$rate, swingPct=$swingPct, velocityAutomation=$velocityAutomation, dynamicPct=$dynamicPct)"
     }
@@ -69,9 +63,7 @@ class ChordModeSetting(
     val level: ChordLevel = ChordLevel.L_7,
     val transpose: Int = 0,
     val arpPct: Int = 10
-) : SpecificModeSetting(
-    PadMode.Chord
-) {
+) : SpecificModeSetting(PadMode.Chord) {
 
     init {
         arpPct.requireInRange(0, 100)

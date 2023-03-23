@@ -10,96 +10,112 @@
       "offset": 12,
       "title": "Pad12",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 13,
       "title": "Pad13",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 14,
       "title": "Pad14",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 15,
       "title": "Pad15",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 8,
       "title": "Pad8",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 9,
       "title": "Pad9",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 10,
       "title": "Pad10",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 11,
       "title": "Pad11",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 4,
       "title": "Pad4",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 5,
       "title": "Pad5",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 6,
       "title": "Pad6",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 7,
       "title": "Pad7",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 0,
       "title": "Pad0",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 1,
       "title": "Pad1",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 2,
       "title": "Pad2",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     },
     {
       "offset": 3,
       "title": "Pad3",
       "mode": "Pad",
-      "velocity": 90
+      "velocity": 90,
+      "specificModeSetting": {"mode": "Pad"}
     }
   ]
 }

@@ -6,8 +6,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import top.yudoge.vpad.api.*
 import top.yudoge.vpad.domain.PadSettingDomain
+import top.yudoge.vpad.domain.PresetDomain
+import top.yudoge.vpad.pojo.*
 import top.yudoge.vpad.repository.SettingRepository
-import top.yudoge.vpadapi.Constants
 import top.yudoge.vpadapi.VPadServer
 import top.yudoge.vpadapi.structure.*
 import javax.inject.Inject
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class PadViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val padSettingDomain: PadSettingDomain,
+    private val presetDomain: PresetDomain,
     private val settingRepository: SettingRepository,
     private val controlMessageViewmodel: ControlMessageViewmodel
 ) : ViewModel() {
@@ -33,21 +35,24 @@ class PadViewModel @Inject constructor(
 
     // 关于设置项
     val bpm: LiveData<Int> = settingRepository.bpm.asLiveData()
-    val padSettings: LiveData<List<PadSetting>> = padSettingDomain.padSettings
+    val workingPreset: LiveData<Preset> = presetDomain.workingPreset;
     private var _settingMode = false
     val settingMode by ::_settingMode
-    val baseNote: LiveData<Int> = settingRepository.baseNote.asLiveData()
+
+//    val baseNote: LiveData<Int> = settingRepository.baseNote.asLiveData()
+//    val padSettings: LiveData<List<PadSetting>> = padSettingDomain.padSettings
 
     fun setBpm(bpm: Int) = viewModelScope.launch {
         settingRepository.updateBpm(bpm)
         _screenMessage.value = "bpm -> ${bpm}"
     }
 
-    fun getMessageByPadState(padId: Int, state: Int, padSetting: PadSetting, bpm: Int, baseNote: Int) : Message {
+    fun getMessageByPadState(state: Int, padSetting: PadSetting, bpm: Int, baseNote: Int) : Message {
 
-        _screenMessage.value = "Pad ${padId} ${if(state == MidiMessage.STATE_ON) "ON" else "OFF"}, note ${baseNote + padId} "
+        _screenMessage.value = "Pad ${padSetting.title} ${if(state == MidiMessage.STATE_ON) "ON" else "OFF"}, note ${baseNote + padSetting.offset} "
 
-        val note = baseNote + padId
+        Log.i("PadViewModel", "PadSetting => " + padSetting)
+        val note = baseNote + padSetting.offset
         val subSetting = padSetting.specificModeSetting
         when (padSetting.mode) {
             PadMode.Pad -> return MidiMessage(note, padSetting.velocity, state)

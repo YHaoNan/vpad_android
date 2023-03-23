@@ -2,6 +2,7 @@ package top.yudoge.vpad.toplevel
 
 import com.google.gson.*
 import top.yudoge.vpad.api.*
+import top.yudoge.vpad.pojo.*
 import java.lang.IllegalStateException
 import java.lang.reflect.Type
 

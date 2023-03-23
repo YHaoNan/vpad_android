@@ -18,14 +18,27 @@ class SettingRepository @Inject constructor(
     @ApplicationContext private val context: Context,
 ){
 
-    private val defaultPadSetting by lazy {
-        InputStreamReader(context.assets.open(Constants.DEFAULT_PAD_SETTING_FILE_NAME)).readText()
+//    // remove this
+//    private val defaultPadSetting by lazy {
+//        InputStreamReader(context.assets.open(Constants.DEFAULT_PAD_SETTING_FILE_NAME)).readText()
+//    }
+//    // remove this
+//    val padSettings: Flow<String> = context.dataStore.data
+//        .map {
+//            it[PAD_SETTING_KEY] ?: defaultPadSetting
+//        }
+//
+
+    private val defaultPreset by lazy {
+        InputStreamReader(context.assets.open(Constants.DEFAULT_PRESET_FILE_NAME)).readText()
     }
 
-    val padSettings: Flow<String> = context.dataStore.data
+    // 当前工作Preset，这是一个文本格式的JSON
+    val workingPreset: Flow<String> = context.dataStore.data
         .map {
-            it[PAD_SETTING_KEY] ?: defaultPadSetting
+            it[WORKING_PRESET_KEY] ?: defaultPreset
         }
+
 
     val bpm: Flow<Int> = context.dataStore.data
         .map {
@@ -38,13 +51,22 @@ class SettingRepository @Inject constructor(
         }
 
     /**
-     * padSetting must be a vaild json string
+     * preset must be a vaild json string
      */
-    suspend fun updatePadSetting(padSetting: String) {
+    suspend fun updateWorkingPreset(preset: String) {
         context.dataStore.edit {
-            it[PAD_SETTING_KEY] = padSetting
+            it[WORKING_PRESET_KEY] = preset
         }
     }
+
+    /**
+     * padSetting must be a vaild json string
+     */
+//    suspend fun updatePadSetting(padSetting: String) {
+//        context.dataStore.edit {
+//            it[PAD_SETTING_KEY] = padSetting
+//        }
+//    }
 
     /**
      * bpm must in range [1, 65535]
@@ -73,7 +95,10 @@ class SettingRepository @Inject constructor(
     }
 
     companion object {
-        private val PAD_SETTING_KEY = stringPreferencesKey("pad_setting_json")
+        // remove this
+//        private val PAD_SETTING_KEY = stringPreferencesKey("pad_setting_json")
+
+        private val WORKING_PRESET_KEY = stringPreferencesKey("working_preset")
         private val BPM_KEY = intPreferencesKey("bpm")
         private val BASE_NOTE_KEY = intPreferencesKey("base_note")
         const val TAG = "SettingRepository"

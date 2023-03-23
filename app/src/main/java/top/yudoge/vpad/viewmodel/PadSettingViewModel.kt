@@ -14,14 +14,14 @@ class PadSettingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val padSettingDomain: PadSettingDomain,
 ): ViewModel() {
-    val padId = savedStateHandle.get<Int>(PAD_ID_KEY)!!
-    val settingItems: LiveData<List<SettingItem>> = padSettingDomain.getSettingItems(padId - 1)
+    val padPosition = savedStateHandle.get<Int>(PAD_POSITION_KEY)!!
+    val settingItems: LiveData<List<SettingItem>> = padSettingDomain.getSettingItems(padPosition)
 
     fun updateSettingItem(newItem: SettingItem) = viewModelScope.launch {
-        padSettingDomain.updatePadSettingItem(padId - 1, newItem)
+        padSettingDomain.updatePadSettingItem(padPosition, newItem)
     }
 
     companion object {
-        const val PAD_ID_KEY = "padId"
+        const val PAD_POSITION_KEY = "padPosition"
     }
 }

@@ -1,7 +1,5 @@
 package top.yudoge.vpad.pojo
 
-import top.yudoge.vpad.api.PadSetting
-
 /**
  * 在VPad中，软件所展示的打击垫UI来源于一个Preset，也就是预制
  * Preset规定了当前的基音符，规定了用户调用Rgn+和Rgn-时，基音符
