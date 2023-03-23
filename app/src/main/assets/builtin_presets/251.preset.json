@@ -1,0 +1,41 @@
+{
+  "presetName": "2-5-1 Chord",
+  "author": "Yudoge",
+  "presetDescription": "This preset give you 3 pads and an esay way to play 2-5-1 chord progression.",
+  "baseNote": 72,
+  "regionSpan": 1,
+  "padsPerLine": 3,
+  "padSettings": [
+    {
+      "offset": 2,
+      "title": "2Min7",
+      "mode": "Chord",
+      "velocity": "90",
+      "specificModeSetting": {
+        "chordLevel": 1,
+        "chordType": 1
+      }
+    },
+    {
+      "offset": 7,
+      "title": "5Maj7",
+      "mode": "Chord",
+      "velocity": "90",
+      "specificModeSetting": {
+        "chordLevel": 1,
+        "chordType": 0,
+        "transpose": 1
+      }
+    },
+    {
+      "offset": 0,
+      "title": "1Maj7",
+      "mode": "Chord",
+      "velocity": "90",
+      "specificModeSetting": {
+        "chordLevel": 1,
+        "chordType": 0
+      }
+    }
+  ]
+}
