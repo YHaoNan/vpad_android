@@ -2,7 +2,7 @@
   "presetName": "Traditional Pad",
   "author": "Yudoge",
   "presetDescription": "A simple & boring pad.",
-  "baseNote": 35,
+  "baseNote": 36,
   "regionSpan": 16,
   "padsPerLine": 4,
   "padSettings": [
@@ -16,6 +16,7 @@
     {
       "offset": 13,
       "title": "Pad13",
+      "mode": "Pad",
       "velocity": 90,
       "specificModeSetting": {"mode": "Pad"}
     },

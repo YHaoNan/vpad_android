@@ -88,19 +88,11 @@ class PadViewModel @Inject constructor(
 
 
     fun increaseNoteRegion() = viewModelScope.launch {
-        if (settingRepository.increaseBaseNote(16)) {
-            _screenMessage.value = "Region + 16"
-        } else {
-            _screenMessage.value = "Limited"
-        }
+        _screenMessage.value = "Rgn +" + presetDomain.increaseBaseNote()
     }
 
     fun decreaseNoteRegion() = viewModelScope.launch {
-        if (settingRepository.increaseBaseNote(-16)) {
-            _screenMessage.value = "Region - 16"
-        } else {
-            _screenMessage.value = "Limited"
-        }
+        _screenMessage.value = "Rgn -" + Math.abs(presetDomain.decreaseBaseNote())
     }
 
     fun openSettingMode() {

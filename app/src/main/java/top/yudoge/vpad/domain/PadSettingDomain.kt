@@ -1,7 +1,6 @@
 package top.yudoge.vpad.domain
 
 import android.text.InputType
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.google.gson.*
@@ -9,6 +8,7 @@ import top.yudoge.vpad.api.*
 import top.yudoge.vpad.pojo.*
 import top.yudoge.vpad.toplevel.gson
 import top.yudoge.vpad.toplevel.names
+import top.yudoge.vpad.toplevel.replace
 import top.yudoge.vpad.view.setting_view.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -156,15 +156,6 @@ class PadSettingDomain @Inject constructor(
     private inline fun SettingItem.selectedValue(): String {
         this as SelectSettingItem
         return this.values[this.valueId]
-    }
-    private inline fun JsonObject.replace(name: String, value: Any) {
-        remove(name)
-        if (value is Number) addProperty(name, value)
-        else if (value is Char) addProperty(name, value)
-        else if (value is Boolean) addProperty(name, value)
-        else if (value is String) addProperty(name, value)
-        else if (value is JsonElement) add(name, value)
-        else add(name, gson.toJsonTree(value))
     }
 
 }

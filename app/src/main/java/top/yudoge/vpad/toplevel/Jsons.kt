@@ -32,4 +32,13 @@ class SpecificModeSettingDeserializer : JsonDeserializer<SpecificModeSetting> {
 
 }
 
+inline fun JsonObject.replace(name: String, value: Any) {
+    remove(name)
+    if (value is Number) addProperty(name, value)
+    else if (value is Char) addProperty(name, value)
+    else if (value is Boolean) addProperty(name, value)
+    else if (value is String) addProperty(name, value)
+    else if (value is JsonElement) add(name, value)
+    else add(name, gson.toJsonTree(value))
+}
 val gson = GsonBuilder().registerTypeAdapter(SpecificModeSetting::class.java, SpecificModeSettingDeserializer()).create()

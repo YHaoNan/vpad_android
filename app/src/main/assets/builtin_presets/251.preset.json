@@ -2,9 +2,9 @@
   "presetName": "2-5-1 Chord",
   "author": "Yudoge",
   "presetDescription": "This preset give you 3 pads and an esay way to play 2-5-1 chord progression.",
-  "baseNote": 72,
   "regionSpan": 1,
   "padsPerLine": 3,
+  "baseNote": 66,
   "padSettings": [
     {
       "offset": 2,
@@ -13,8 +13,8 @@
       "velocity": "90",
       "specificModeSetting": {
         "mode": "Chord",
-        "chordLevel": 1,
-        "chordType": 1
+        "level": "L_7",
+        "type": "MINOR"
       }
     },
     {
@@ -24,8 +24,8 @@
       "velocity": "90",
       "specificModeSetting": {
         "mode": "Chord",
-        "chordLevel": 1,
-        "chordType": 0,
+        "level": "L_7",
+        "type": "MAJOR",
         "transpose": 1
       }
     },
@@ -36,8 +36,44 @@
       "velocity": "90",
       "specificModeSetting": {
         "mode": "Chord",
-        "chordLevel": 1,
-        "chordType": 0
+        "level": "L_7",
+        "type": "MAJOR"
+      }
+    },
+    {
+      "offset": 2,
+      "title": "2Min13",
+      "mode": "Chord",
+      "velocity": "90",
+      "specificModeSetting": {
+        "mode": "Chord",
+        "level": "L_13",
+        "type": "MINOR",
+        "transpose": 1
+      }
+    },
+    {
+      "offset": 7,
+      "title": "5Maj13",
+      "mode": "Chord",
+      "velocity": "90",
+      "specificModeSetting": {
+        "mode": "Chord",
+        "level": "L_13",
+        "type": "MAJOR",
+        "transpose": 2
+      }
+    },
+    {
+      "offset": 0,
+      "title": "1Maj13",
+      "mode": "Chord",
+      "velocity": "90",
+      "specificModeSetting": {
+        "mode": "Chord",
+        "level": "L_13",
+        "type": "MAJOR",
+        "transpose": 1
       }
     }
   ]
