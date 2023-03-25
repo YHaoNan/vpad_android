@@ -36,7 +36,6 @@ class PresetRepository @Inject constructor(
      * 返回的数据按照最后修改时间降序排序
      */
     fun flushPresets() {
-
         val newList = safeGetPresetDir(context).listFiles()
             .filter { it.extension.equals("json") && it.isFile }
             .sortedByDescending { it.lastModified() }

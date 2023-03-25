@@ -56,7 +56,13 @@ class PadFragment : Fragment() {
                     activityViewModel.sendMessageToServer(it)
                 }
             }
+            "Pst" -> gotoPresetUI()
         }
+    }
+
+    private fun gotoPresetUI() {
+        val action = PadFragmentDirections.actionPadFragmentToPresetFragment()
+        findNavController().navigate(action)
     }
 
     override fun onCreateView(

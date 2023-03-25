@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_padFragment_to_padSettingFragment"
             app:destination="@id/padSettingFragment" />
+        <action
+            android:id="@+id/action_padFragment_to_presetFragment"
+            app:destination="@id/presetFragment" />
     </fragment>
     <fragment
         android:id="@+id/padSettingFragment"
@@ -42,4 +45,8 @@
             android:name="vPadServer"
             app:argType="top.yudoge.vpadapi.VPadServer" />
     </fragment>
+    <fragment
+        android:id="@+id/presetFragment"
+        android:name="top.yudoge.vpad.ui.PresetFragment"
+        android:label="PresetFragment" />
 </navigation>

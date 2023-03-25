@@ -18,8 +18,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class PadViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-    private val padSettingDomain: PadSettingDomain,
+    savedStateHandle: SavedStateHandle,
     private val workingPresetDomain: WorkingPresetDomain,
     private val settingRepository: SettingRepository,
     private val controlMessageViewmodel: ControlMessageViewmodel

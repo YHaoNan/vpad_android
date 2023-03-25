@@ -18,9 +18,6 @@ import java.io.File
 
 import android.content.Intent
 import android.net.Uri
-import android.view.View
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
 
@@ -48,6 +45,20 @@ inline fun Context.showInputDialog(title: String, value: String?, hint: String?,
         })
         .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { dialogInterface, i -> }).show()
 
+}
+
+inline fun Context.showMessageDialog(
+    title: String, message: String,
+    okLabel: CharSequence = "OK",
+    okCallback: DialogInterface.OnClickListener = DialogInterface.OnClickListener {di, i -> di.dismiss()},
+    cancelLabel: CharSequence = "Cancel",
+    cancelCallback: DialogInterface.OnClickListener = DialogInterface.OnClickListener {di, i -> di.dismiss()},
+) {
+    AlertDialog.Builder(this)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton(okLabel, okCallback)
+        .setNegativeButton(cancelLabel, cancelCallback).show()
 }
 
 inline fun <T> Context.showListDialog(title: String, list: List<T>, map: (T)->String, crossinline callback: (T) -> Unit) {

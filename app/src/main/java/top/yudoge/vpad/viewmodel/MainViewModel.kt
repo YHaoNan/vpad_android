@@ -86,8 +86,6 @@ class MainViewModel @Inject constructor(
                 presetName, false
             )
         }
-
-        presetRepository.flushPresets()
     }
 
     companion object {

@@ -1,7 +1,7 @@
 {
-  "presetName": "Traditional Pad",
+  "presetName": "4 x 4 Pad",
   "author": "Yudoge",
-  "presetDescription": "A simple & boring pad.",
+  "description": "A simple & boring 4 x 4 pad.",
   "baseNote": 36,
   "regionSpan": 16,
   "padsPerLine": 4,
