@@ -1,15 +1,23 @@
 package top.yudoge.vpad.viewmodel
 
+import android.content.Context
+import android.os.Environment
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import top.yudoge.vpad.api.CommunicatorHolder
 import top.yudoge.vpad.api.VPadServerCommunicator
+import top.yudoge.vpad.repository.PresetRepository
+import top.yudoge.vpad.toplevel.safeGetPresetDir
+import top.yudoge.vpadapi.Constants
 import top.yudoge.vpadapi.VPadServer
 import top.yudoge.vpadapi.structure.Message
+import java.io.File
+import java.io.InputStreamReader
 import java.lang.IllegalStateException
 import javax.inject.Inject
 
@@ -20,11 +28,15 @@ import javax.inject.Inject
  *
  */
 @HiltViewModel
-class MainViewModel @Inject constructor(): ViewModel(), CommunicatorHolder {
+class MainViewModel @Inject constructor(
+    val presetRepository: PresetRepository,
+    @ApplicationContext val context: Context
+): ViewModel(), CommunicatorHolder {
 
     private var vpadServer: VPadServer? = null
     private var communicator: VPadServerCommunicator? = null
     private lateinit var coroutineExceptionHandler: CoroutineExceptionHandler
+
 
     fun setUpVPadServer(vpadServer: VPadServer) {
         this.vpadServer = vpadServer
@@ -61,6 +73,21 @@ class MainViewModel @Inject constructor(): ViewModel(), CommunicatorHolder {
         if (communicator == null) throw IllegalStateException("No communicator instance")
         Log.d(TAG, "send message to server" + message.toString())
         communicator!!.sendMessageToServer(message)
+    }
+
+    fun makeSureBuiltinPresetHasExported() {
+        // 如果文件夹已经存在，代表已经建立
+        if (File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), top.yudoge.vpad.toplevel.Constants.PRESET_DIR).exists()) return
+
+        top.yudoge.vpad.toplevel.Constants.BUILTIN_PRESET_FILE_NAMES.forEach {
+            val presetName = it.substring(it.lastIndexOf("/") + 1, it.indexOf("."))
+            presetRepository.addPresetByJson(
+                InputStreamReader(context.assets.open(it)).readText(),
+                presetName, false
+            )
+        }
+
+        presetRepository.flushPresets()
     }
 
     companion object {

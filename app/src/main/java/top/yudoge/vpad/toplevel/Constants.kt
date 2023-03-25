@@ -6,7 +6,11 @@ import top.yudoge.vpad.pojo.FaderMode
 object Constants {
     const val DB_NAME = "vpad_db"
     const val DEFAULT_PAD_SETTING_FILE_NAME = "default_pad_setting.json"
-    const val DEFAULT_PRESET_FILE_NAME = "builtin_presets/traditional-pad.preset.json"
+    const val DEFAULT_PRESET_FILE_NAME = "builtin_presets/Traditional Pad.preset.json"
+    val BUILTIN_PRESET_FILE_NAMES = listOf<String>(
+        "builtin_presets/Traditional Pad.preset.json",
+        "builtin_presets/2-5-1 Chord.preset.json"
+    )
     const val DEFAULT_BPM: Int = 130
     const val DEFAULT_BASE: Int = 35
 
@@ -38,4 +42,5 @@ object Constants {
 
 
     const val CRASH_LOG_NAME = "crash.log"
+    const val PRESET_DIR = "presets"
 }

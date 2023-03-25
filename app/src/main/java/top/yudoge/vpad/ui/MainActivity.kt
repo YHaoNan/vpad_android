@@ -87,6 +87,10 @@ class MainActivity : AppCompatActivity() {
                     "退出程序", {d, i -> finish()},
                     cancelable = false
                 ).show()
+            } else {
+                // 文件权限已经被授予，尝试导出内建preset
+                // 如果已经导出过，该方法无任何效果
+                mainViewModel.makeSureBuiltinPresetHasExported()
             }
         }
     }

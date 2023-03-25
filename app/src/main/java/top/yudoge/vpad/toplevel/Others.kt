@@ -1,5 +1,7 @@
 package top.yudoge.vpad.toplevel
 
+import android.content.Context
+import android.os.Environment
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -13,6 +15,7 @@ import top.yudoge.vpad.viewmodel.FaderViewModel
 import top.yudoge.vpad.viewmodel.MainViewModel
 import top.yudoge.vpadapi.structure.CCMessage
 import top.yudoge.vpadapi.structure.Message
+import java.io.File
 
 
 fun SeekBar.setOnWheelStateChangeListener(wheelStateChangeListener: WheelStateChangeListener) {
@@ -89,4 +92,19 @@ class OnFaderStateChanged(private val fader: Fader, private val onHasAMessageToS
         }
     }
 
+}
+
+/**
+ * 获取代表Preset目录的File，该File是一个Dir
+ * 调用该方法时preset目录可能不存在，该方法必须自动创建该目录
+ * 也可能有和preset同名的文件阻挡创建preset目录，此时该方法要删除这个文件再创建目录
+ * 该方法一定在文件读写权限被正确授予时才能调用
+ */
+fun safeGetPresetDir(context: Context): File {
+    val presetDir = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), Constants.PRESET_DIR)
+
+    if (presetDir.isFile()) presetDir.delete()
+    if (!presetDir.exists()) presetDir.mkdirs()
+
+    return presetDir
 }

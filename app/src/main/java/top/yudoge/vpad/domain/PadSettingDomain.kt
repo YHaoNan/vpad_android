@@ -16,10 +16,10 @@ import javax.inject.Singleton
 
 @Singleton
 class PadSettingDomain @Inject constructor(
-    private val presetDomain: PresetDomain
+    private val workingPresetDomain: WorkingPresetDomain
 ) {
 
-    val padSettings: LiveData<List<PadSetting>> = Transformations.map(presetDomain.workingPreset) { preset ->
+    val padSettings: LiveData<List<PadSetting>> = Transformations.map(workingPresetDomain.workingPreset) { preset ->
         preset.padSettings
     }
 
@@ -34,7 +34,7 @@ class PadSettingDomain @Inject constructor(
     }
 
     suspend fun updatePadSettingItem(index: Int, settingItem: SettingItem) {
-        val workingPresetJsonString = presetDomain.workingPresetJson.value!!;
+        val workingPresetJsonString = workingPresetDomain.workingPresetJson.value!!;
         val fullPresetJO = JsonParser.parseString(workingPresetJsonString).asJsonObject
         val padSettingJA = fullPresetJO["padSettings"].asJsonArray
         val jo = padSettingJA[index].asJsonObject
@@ -76,7 +76,7 @@ class PadSettingDomain @Inject constructor(
 
         padSettingJA[index] = jo;
         fullPresetJO.replace("padSettings", padSettingJA)
-        presetDomain.updateWorkingPreset(gson.toJson(fullPresetJO))
+        workingPresetDomain.updateWorkingPreset(gson.toJson(fullPresetJO))
 
     }
 
@@ -117,6 +117,7 @@ class PadSettingDomain @Inject constructor(
                         add(subSetting.arpPct.asInputAndButtonItem(CHORD_ARP_PCT, "琶音程度", "控制和弦中不同音的起始延迟", "0~100"))
                         add(subSetting.transpose.asInputItem(CHORD_TRANSPOSE, "和弦转置", "控制和弦的转置", ""))
                     }
+                    PadMode.Pad -> {}
                 }
             }
         }
@@ -142,7 +143,7 @@ class PadSettingDomain @Inject constructor(
     }
 
     private inline fun String.asDivider(id: Int = NO_ID) = SettingDivider(id, this)
-    private inline fun <reified T : Enum<*>> T.asSelectItem(id: Int = NO_ID, title: String, subTitle: String?)  =
+    private inline fun <reified T : Enum<T>> T.asSelectItem(id: Int = NO_ID, title: String, subTitle: String?)  =
         SelectSettingItem(id, title, subTitle, ordinal, enumValues<T>().names())
     private inline fun Int.asInputItem(id: Int = NO_ID, title: String, subTitle: String?, hint: String) =
         InputSettingItem(id, title, subTitle, this.toString(), hint, InputType.TYPE_CLASS_NUMBER)

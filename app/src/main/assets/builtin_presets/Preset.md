@@ -1,3 +1,5 @@
+内建preset的名字必须和presetName一样 
+
 preset文件中包含四个字段：
 
 - baseNote: 当前基准音符，每一个pad代表的音符是它的offset + baseNote

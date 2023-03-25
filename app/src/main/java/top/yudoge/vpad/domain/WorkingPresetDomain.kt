@@ -9,11 +9,10 @@ import top.yudoge.vpad.repository.SettingRepository
 import top.yudoge.vpad.toplevel.gson
 import javax.inject.Inject
 import javax.inject.Singleton
-import com.google.gson.*
 import top.yudoge.vpad.toplevel.replace
 
 @Singleton
-class PresetDomain @Inject constructor(
+class WorkingPresetDomain @Inject constructor(
     private val settingRepository: SettingRepository
 ){
     val workingPresetJson: LiveData<String> = settingRepository.workingPreset.asLiveData()

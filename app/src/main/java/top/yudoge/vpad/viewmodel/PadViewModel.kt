@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import top.yudoge.vpad.api.*
 import top.yudoge.vpad.domain.PadSettingDomain
-import top.yudoge.vpad.domain.PresetDomain
+import top.yudoge.vpad.domain.WorkingPresetDomain
 import top.yudoge.vpad.pojo.*
 import top.yudoge.vpad.repository.SettingRepository
 import top.yudoge.vpadapi.VPadServer
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class PadViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val padSettingDomain: PadSettingDomain,
-    private val presetDomain: PresetDomain,
+    private val workingPresetDomain: WorkingPresetDomain,
     private val settingRepository: SettingRepository,
     private val controlMessageViewmodel: ControlMessageViewmodel
 ) : ViewModel() {
@@ -35,7 +35,7 @@ class PadViewModel @Inject constructor(
 
     // 关于设置项
     val bpm: LiveData<Int> = settingRepository.bpm.asLiveData()
-    val workingPreset: LiveData<Preset> = presetDomain.workingPreset;
+    val workingPreset: LiveData<Preset> = workingPresetDomain.workingPreset;
     private var _settingMode = false
     val settingMode by ::_settingMode
 
@@ -88,11 +88,11 @@ class PadViewModel @Inject constructor(
 
 
     fun increaseNoteRegion() = viewModelScope.launch {
-        _screenMessage.value = "Rgn +" + presetDomain.increaseBaseNote()
+        _screenMessage.value = "Rgn +" + workingPresetDomain.increaseBaseNote()
     }
 
     fun decreaseNoteRegion() = viewModelScope.launch {
-        _screenMessage.value = "Rgn -" + Math.abs(presetDomain.decreaseBaseNote())
+        _screenMessage.value = "Rgn -" + Math.abs(workingPresetDomain.decreaseBaseNote())
     }
 
     fun openSettingMode() {
