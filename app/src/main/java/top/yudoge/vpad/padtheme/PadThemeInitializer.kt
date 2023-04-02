@@ -1,5 +1,6 @@
 package top.yudoge.vpad.padtheme
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import top.yudoge.vpad.pojo.PadSetting
@@ -15,5 +16,8 @@ abstract class PadThemeInitializer() {
         padPosition: Int,
         onPadEvent: (padSetting: PadSetting, padIndex: Int, state: Int) -> Unit
     )
+
+    abstract fun turnOnPadViewManually(padView: View);
+    abstract fun turnOffPadViewManually(padView: View);
 
 }

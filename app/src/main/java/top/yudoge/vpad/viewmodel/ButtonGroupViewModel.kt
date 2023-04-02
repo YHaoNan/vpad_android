@@ -18,10 +18,10 @@ class ButtonGroupViewModel {
         ButtonLabel("PDST"),
         ButtonLabel("Rgn-"),
         ButtonLabel("Rgn+"),
-        ButtonLabel("Pst", labelColor = R.color.grey),
-        ButtonLabel("--", labelColor = R.color.grey),
-        ButtonLabel("--", labelColor = R.color.grey),
-        ButtonLabel("--", labelColor = R.color.grey),
+        ButtonLabel("Pst"),
+        ButtonLabel("Exp"),
+        ButtonLabel("Col"),
+        ButtonLabel("Edt"),
     )
 
 }

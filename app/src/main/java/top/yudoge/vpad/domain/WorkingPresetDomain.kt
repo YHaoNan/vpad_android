@@ -3,6 +3,7 @@ package top.yudoge.vpad.domain
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.asLiveData
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import top.yudoge.vpad.pojo.Preset
 import top.yudoge.vpad.repository.SettingRepository
@@ -24,6 +25,24 @@ class WorkingPresetDomain @Inject constructor(
     // 只允许外界通过Json串来修改Preset，发布给应用的Preset是完全不可变的，应用不可以修改其中的任何数据
     suspend fun updateWorkingPreset(presetJson: String) {
         settingRepository.updateWorkingPreset(presetJson)
+    }
+
+    // 一个模板方法，将当前workingPreset转成JsonObject，调用updateStrategy，传入当前的JsonObject
+    // updateStrategy分析当前的JsonObject，判断是否需要修改，比如如果在更新padsPerLine时，新值和旧值一样
+    // 就无需更改。如果需要更改，执行更改。updateStrategy的返回值代表是否需要实际执行更改。
+    private suspend fun updateInJsonFormat(updateStrategy: (jo: JsonObject) -> Boolean) {
+        val workingPresetJsonString = this.workingPresetJson.value!!;
+        val fullPresetJO = JsonParser.parseString(workingPresetJsonString).asJsonObject
+        if (updateStrategy.invoke(fullPresetJO))
+            updateWorkingPreset(gson.toJson(fullPresetJO))
+    }
+
+    suspend fun updatePadsPerLine(newValue: Int) = updateInJsonFormat {
+        if (it["padsPerLine"].asInt != newValue) {
+            it.replace("padsPerLine", newValue)
+            true
+        }
+        else false
     }
 
     /**

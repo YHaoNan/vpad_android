@@ -35,20 +35,28 @@ class AKaiMPD218PadThemeInitializer : PadThemeInitializer() {
         binding.pad.setOnTouchListener { view, motionEvent ->
             when(motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    binding.pad.setBackgroundResource(R.drawable.bg_akai_mpd_218_pressed)
+                    turnOnPadViewManually(binding.pad)
                     onPadEvent(padSetting, padPosition, MidiMessage.STATE_ON)
                 }
                 MotionEvent.ACTION_UP -> {
-                    binding.pad.setBackgroundResource(R.drawable.bg_akai_mpd_218_normal)
+                    turnOffPadViewManually(binding.pad)
                     onPadEvent(padSetting, padPosition, MidiMessage.STATE_OFF)
                 }
                 MotionEvent.ACTION_CANCEL -> {
-                    binding.pad.setBackgroundResource(R.drawable.bg_akai_mpd_218_normal)
+                    turnOffPadViewManually(binding.pad)
                     onPadEvent(padSetting, padPosition, MidiMessage.STATE_OFF)
                 }
             }
             true
         }
+    }
+
+    override fun turnOnPadViewManually(padView: View) {
+        padView.setBackgroundResource(R.drawable.bg_akai_mpd_218_pressed)
+    }
+
+    override fun turnOffPadViewManually(padView: View) {
+        padView.setBackgroundResource(R.drawable.bg_akai_mpd_218_normal)
     }
 
     companion object {

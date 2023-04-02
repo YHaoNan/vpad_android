@@ -1,7 +1,9 @@
 package top.yudoge.vpad.viewmodel
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.*
+import com.google.gson.JsonParser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import top.yudoge.vpad.api.*
@@ -9,6 +11,8 @@ import top.yudoge.vpad.domain.PadSettingDomain
 import top.yudoge.vpad.domain.WorkingPresetDomain
 import top.yudoge.vpad.pojo.*
 import top.yudoge.vpad.repository.SettingRepository
+import top.yudoge.vpad.toplevel.gson
+import top.yudoge.vpad.toplevel.replace
 import top.yudoge.vpadapi.VPadServer
 import top.yudoge.vpadapi.structure.*
 import javax.inject.Inject
@@ -35,15 +39,51 @@ class PadViewModel @Inject constructor(
     // 关于设置项
     val bpm: LiveData<Int> = settingRepository.bpm.asLiveData()
     val workingPreset: LiveData<Preset> = workingPresetDomain.workingPreset;
-    private var _settingMode = false
-    val settingMode by ::_settingMode
+    private var _settingMode: MutableLiveData<Boolean> = MutableLiveData(false);
+    val settingMode: LiveData<Boolean> by ::_settingMode
 
-//    val baseNote: LiveData<Int> = settingRepository.baseNote.asLiveData()
-//    val padSettings: LiveData<List<PadSetting>> = padSettingDomain.padSettings
+    // 私有的，外部不可以访问，但是可以增删数据
+    private val _copyToPadIndexies: MutableList<Pair<Int, View>> = mutableListOf()
+    // 外部可以公开访问 但是不可变
+    val copyToPadIndexies: List<Pair<Int, View>> = _copyToPadIndexies
+    var currentDragItem: Int = -1
+
+    fun addCopyPad(index: Int, view: View) {
+        _copyToPadIndexies.add(Pair(index, view))
+    }
+    fun containsCopyPad(index: Int, view: View) = _copyToPadIndexies.contains(Pair(index, view))
+    fun clearCopyPads() {
+        _copyToPadIndexies.clear();
+    }
+    fun removeCopyPad(index: Int, view: View) {
+        _copyToPadIndexies.remove(Pair(index, view))
+    }
 
     fun setBpm(bpm: Int) = viewModelScope.launch {
         settingRepository.updateBpm(bpm)
         _screenMessage.value = "bpm -> ${bpm}"
+    }
+
+    fun setPadsPerLine(newPadsPerLine: Int) = viewModelScope.launch {
+        workingPresetDomain.updatePadsPerLine(newPadsPerLine)
+    }
+
+    fun updatePadSettingsBatch() = viewModelScope.launch {
+        if (currentDragItem != -1 && copyToPadIndexies.size != 0) {
+            val jo = JsonParser.parseString(workingPresetDomain.workingPresetJson.value!!).asJsonObject
+            val padSettings = jo["padSettings"].asJsonArray
+            val sourceSetting = padSettings[currentDragItem].asJsonObject
+            for (i in copyToPadIndexies) {
+                if (currentDragItem == i.first) continue
+                val targetSetting = padSettings[i.first].asJsonObject
+                targetSetting.replace("velocity", sourceSetting["velocity"])
+                targetSetting.replace("mode", sourceSetting["mode"])
+                targetSetting.replace("specificModeSetting", sourceSetting["specificModeSetting"])
+                padSettings[i.first] = targetSetting
+            }
+            jo.replace("padSettings", padSettings)
+            workingPresetDomain.updateWorkingPreset(gson.toJson(jo))
+        }
     }
 
     fun getMessageByPadState(state: Int, padSetting: PadSetting, bpm: Int, baseNote: Int) : Message {
@@ -95,12 +135,12 @@ class PadViewModel @Inject constructor(
     }
 
     fun openSettingMode() {
-        _settingMode = true
+        _settingMode.value = true
         _screenMessage.value = "setting mode opened"
     }
 
     fun closeSettingMode() {
-        _settingMode = false
+        _settingMode.value = false
         _screenMessage.value = "setting mode closed"
     }
 
