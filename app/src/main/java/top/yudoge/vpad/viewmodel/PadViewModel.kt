@@ -86,6 +86,23 @@ class PadViewModel @Inject constructor(
         }
     }
 
+    fun deletePadAt(index: Int) = viewModelScope.launch {
+        val jo = JsonParser.parseString(workingPresetDomain.workingPresetJson.value!!).asJsonObject
+        val padSettings = jo["padSettings"].asJsonArray
+        padSettings.remove(index)
+        jo.replace("padSettings", padSettings)
+        workingPresetDomain.updateWorkingPreset(gson.toJson(jo))
+    }
+
+
+    fun appendPad() = viewModelScope.launch {
+        val jo = JsonParser.parseString(workingPresetDomain.workingPresetJson.value!!).asJsonObject
+        val padSettings = jo["padSettings"].asJsonArray
+        padSettings.add(gson.toJsonTree(PadSetting(0, "NewPad", PadMode.Pad, 90, PadModeSetting())))
+        jo.replace("padSettings", padSettings)
+        workingPresetDomain.updateWorkingPreset(gson.toJson(jo))
+    }
+
     fun getMessageByPadState(state: Int, padSetting: PadSetting, bpm: Int, baseNote: Int) : Message {
 
         _screenMessage.value = "Pad ${padSetting.title} ${if(state == MidiMessage.STATE_ON) "ON" else "OFF"}, note ${baseNote + padSetting.offset} "
@@ -137,6 +154,9 @@ class PadViewModel @Inject constructor(
     fun openSettingMode() {
         _settingMode.value = true
         _screenMessage.value = "setting mode opened"
+    }
+    fun toggleSettingMode() {
+        _settingMode.value = !_settingMode.value!!
     }
 
     fun closeSettingMode() {

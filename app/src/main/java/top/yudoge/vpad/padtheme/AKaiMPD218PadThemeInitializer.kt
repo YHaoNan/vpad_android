@@ -11,6 +11,7 @@ import androidx.databinding.ViewDataBinding
 import top.yudoge.vpad.R
 import top.yudoge.vpad.databinding.ItemPadAkaiMpd218Binding
 import top.yudoge.vpad.pojo.PadSetting
+import top.yudoge.vpad.toplevel.PadEvent
 import top.yudoge.vpadapi.structure.MidiMessage
 
 @SuppressLint("LongLogTag")
@@ -28,26 +29,32 @@ class AKaiMPD218PadThemeInitializer : PadThemeInitializer() {
         binding: ViewDataBinding,
         padSetting: PadSetting,
         padPosition: Int,
-        onPadEvent: (padSetting: PadSetting, padIndex: Int, state: Int) -> Unit
+        settingMode: Boolean,
+        onPadEvent: (padSetting: PadSetting, padIndex: Int, event: PadEvent) -> Unit
     ) {
         binding as ItemPadAkaiMpd218Binding
         binding.padTitle = padSetting.title
+        binding.deleteVisiable = settingMode
         binding.pad.setOnTouchListener { view, motionEvent ->
             when(motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
                     turnOnPadViewManually(binding.pad)
-                    onPadEvent(padSetting, padPosition, MidiMessage.STATE_ON)
+                    if(!settingMode) onPadEvent(padSetting, padPosition, PadEvent.Down)
+                    else onPadEvent(padSetting, padPosition, PadEvent.OpenSetting)
                 }
                 MotionEvent.ACTION_UP -> {
                     turnOffPadViewManually(binding.pad)
-                    onPadEvent(padSetting, padPosition, MidiMessage.STATE_OFF)
+                    if (!settingMode) onPadEvent(padSetting, padPosition, PadEvent.Release)
                 }
                 MotionEvent.ACTION_CANCEL -> {
                     turnOffPadViewManually(binding.pad)
-                    onPadEvent(padSetting, padPosition, MidiMessage.STATE_OFF)
+                    if (!settingMode) onPadEvent(padSetting, padPosition, PadEvent.Release)
                 }
             }
             true
+        }
+        binding.deleteBtn.setOnClickListener {
+            onPadEvent(padSetting, padPosition, PadEvent.Delete)
         }
     }
 

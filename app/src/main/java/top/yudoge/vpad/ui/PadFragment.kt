@@ -22,6 +22,7 @@ import top.yudoge.vpad.databinding.FragmentPadBinding
 import top.yudoge.vpad.di.Pixel
 import top.yudoge.vpad.padtheme.AKaiMPD218PadThemeInitializer
 import top.yudoge.vpad.pojo.ButtonLabel
+import top.yudoge.vpad.toplevel.PadEvent
 import top.yudoge.vpad.toplevel.alert
 import top.yudoge.vpad.toplevel.setOnWheelStateChangeListener
 import top.yudoge.vpad.toplevel.showInputDialog
@@ -48,7 +49,7 @@ class PadFragment : Fragment() {
         when(it.label) {
             "Rgn+" -> padViewModel.increaseNoteRegion()
             "Rgn-" -> padViewModel.decreaseNoteRegion()
-            "PDST" -> padViewModel.openSettingMode()
+            "PDST" -> padViewModel.toggleSettingMode()
             "BPM" -> context?.showInputDialog("设置BPM", value = buttonGroupAdapter.getBpm().toString(), null) {
                 padViewModel.setBpm(it.toInt())
             }
@@ -97,10 +98,22 @@ class PadFragment : Fragment() {
 
         // 因为之前有考虑过添加调制轮的功能，所以抽取了WheelStateChangeListener
         binding.wheel.setOnWheelStateChangeListener(PitchWheelWheelStateChangeListener(activityViewModel))
+        binding.addPad.setOnClickListener {
+            padViewModel.appendPad()
+        }
 
         padViewModel.settingMode.observe(viewLifecycleOwner) {
-            if (it) binding.padContainer.enableDraggable()
-            else binding.padContainer.disableDraggable()
+            if (binding.padContainer.adapter == null) return@observe
+            val adapter = binding.padContainer.adapter as PadContainerAdapter
+            // 设置draggable
+            if (it) {
+                binding.padContainer.enableDraggable()
+                adapter.enableSettingMode()
+            }
+            else {
+                binding.padContainer.disableDraggable()
+                adapter.disableSettingMode()
+            }
         }
 
         val padThemeInitializer = AKaiMPD218PadThemeInitializer();
@@ -173,19 +186,25 @@ class PadFragment : Fragment() {
         padViewModel.workingPreset.observe(viewLifecycleOwner) { preset ->
             val girdLayoutManager = GridLayoutManager(activity, preset.padsPerLine);
             binding.padContainer.layoutManager = girdLayoutManager
-            binding.padContainer.adapter = PadContainerAdapter(padThemeInitializer, preset.padSettings) { padSetting, padPosition, state ->
-                if (padViewModel.settingMode.value!!) {
-                    // 只有当Pad抬起(STATE_OFF)并且并没进行padSetting复制时才跳转到设置页面
-                    if (state == MidiMessage.STATE_ON || padViewModel.copyToPadIndexies.size != 0) return@PadContainerAdapter
+            binding.padContainer.adapter = PadContainerAdapter(padThemeInitializer, preset.padSettings, padViewModel.settingMode.value!!) { padSetting, padPosition, event ->
+                // 只有当没有进行padSetting复制时才跳转到设置页面
+                if (event == PadEvent.OpenSetting && padViewModel.copyToPadIndexies.size != 0) {
                     // to setting fragment
                     val action = PadFragmentDirections.actionPadFragmentToPadSettingFragment(padPosition)
                     findNavController().navigate(action)
                     padViewModel.closeSettingMode()
-                } else {
+                } else if (event == PadEvent.Down){
                     // send midi message
                     activityViewModel.sendMessageToServer(
-                        padViewModel.getMessageByPadState(state, padSetting, buttonGroupAdapter.getBpm(), preset.baseNote)
+                        padViewModel.getMessageByPadState(1, padSetting, buttonGroupAdapter.getBpm(), preset.baseNote)
                     )
+                } else if (event == PadEvent.Release){
+                    // send midi message
+                    activityViewModel.sendMessageToServer(
+                        padViewModel.getMessageByPadState(0, padSetting, buttonGroupAdapter.getBpm(), preset.baseNote)
+                    )
+                } else if (event == PadEvent.Delete) {
+                    padViewModel.deletePadAt(padPosition)
                 }
             }
         }

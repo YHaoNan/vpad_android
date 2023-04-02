@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import top.yudoge.vpad.pojo.PadSetting
+import top.yudoge.vpad.toplevel.PadEvent
 
 /**
  * 代表一个Pad布局初始化器
@@ -14,7 +15,8 @@ abstract class PadThemeInitializer() {
         databinding: ViewDataBinding,
         padSetting: PadSetting,
         padPosition: Int,
-        onPadEvent: (padSetting: PadSetting, padIndex: Int, state: Int) -> Unit
+        settingMode: Boolean,
+        onPadEvent: (padSetting: PadSetting, padIndex: Int, event: PadEvent) -> Unit
     )
 
     abstract fun turnOnPadViewManually(padView: View);
