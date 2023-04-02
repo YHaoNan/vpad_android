@@ -40,15 +40,16 @@ class AKaiMPD218PadThemeInitializer : PadThemeInitializer() {
                 MotionEvent.ACTION_DOWN -> {
                     turnOnPadViewManually(binding.pad)
                     if(!settingMode) onPadEvent(padSetting, padPosition, PadEvent.Down)
-                    else onPadEvent(padSetting, padPosition, PadEvent.OpenSetting)
                 }
                 MotionEvent.ACTION_UP -> {
                     turnOffPadViewManually(binding.pad)
                     if (!settingMode) onPadEvent(padSetting, padPosition, PadEvent.Release)
+                    else onPadEvent(padSetting, padPosition, PadEvent.OpenSetting)
                 }
                 MotionEvent.ACTION_CANCEL -> {
                     turnOffPadViewManually(binding.pad)
                     if (!settingMode) onPadEvent(padSetting, padPosition, PadEvent.Release)
+                    else onPadEvent(padSetting, padPosition, PadEvent.OpenSetting)
                 }
             }
             true

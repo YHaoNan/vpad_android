@@ -204,7 +204,7 @@ class PadFragment : Fragment() {
             binding.padContainer.layoutManager = girdLayoutManager
             binding.padContainer.adapter = PadContainerAdapter(padThemeInitializer, preset.padSettings, padViewModel.settingMode.value!!) { padSetting, padPosition, event ->
                 // 只有当没有进行padSetting复制时才跳转到设置页面
-                if (event == PadEvent.OpenSetting && padViewModel.copyToPadIndexies.size != 0) {
+                if (event == PadEvent.OpenSetting && padViewModel.copyToPadIndexies.size == 0) {
                     // to setting fragment
                     val action = PadFragmentDirections.actionPadFragmentToPadSettingFragment(padPosition)
                     findNavController().navigate(action)

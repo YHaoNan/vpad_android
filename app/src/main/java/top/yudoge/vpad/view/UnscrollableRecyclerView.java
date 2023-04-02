@@ -121,6 +121,7 @@ public class UnscrollableRecyclerView extends RecyclerView {
                 handleMoveAction(ev);
                 break;
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
                 handleReleaseDragItem();
                 break;
         }
@@ -168,7 +169,7 @@ public class UnscrollableRecyclerView extends RecyclerView {
                 // 经过hoverResponse后还在这个underlyingItem上，并且距离开始的时间 > hoverResponseMs
                 if (findUnderlyingItemIndexByPosition((int)lastX, (int)lastY) == underlyingItemPos
                         && System.currentTimeMillis() - lastEnterTime >= hoverResponseMS
-                        && lastAction != MotionEvent.ACTION_UP
+                        && lastActionIsNotUpOrCancel()
                         && currentDragItemPosition != underlyingItemPos) {
                     if (onDragStateChangedListener != null)
                         onDragStateChangedListener.onHoverOnAnItem(currentDragItem, currentDragItemPosition, underlyingItem, underlyingItemPos);
@@ -238,7 +239,7 @@ public class UnscrollableRecyclerView extends RecyclerView {
                 && System.currentTimeMillis() - lastDownTime >= dragResponseMS
                 && currentDragItem == targetLongClickChild
                 && currentDragItemRect.contains((int) lastX, (int) lastY)
-                && lastAction != MotionEvent.ACTION_UP) {
+                && lastActionIsNotUpOrCancel()) {
             ImageView imageView = createImageViewAndFillPixelsByOtherView(targetLongClickChild);
             int xy[] = new int[2];
             targetLongClickChild.getLocationInWindow(xy);
@@ -246,6 +247,10 @@ public class UnscrollableRecyclerView extends RecyclerView {
             // 在当前if中，由于currentDragItem == targetLongClickChild，那么currentDragItemPosition必然是当前drag的position，因为UI只在主线程更新，所以我们可以直接使用它
             onDragStateChangedListener.onDragStart(currentDragItem, currentDragItemPosition);
         }
+    }
+
+    private boolean lastActionIsNotUpOrCancel() {
+        return lastAction != MotionEvent.ACTION_UP && lastAction != MotionEvent.ACTION_CANCEL;
     }
 
     /**
