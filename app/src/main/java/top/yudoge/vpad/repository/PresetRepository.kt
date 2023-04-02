@@ -60,20 +60,20 @@ class PresetRepository @Inject constructor(
      * @throws PresetAddException 添加preset失败
      * @throws IOException
      */
-    fun addPreset(preset: Preset) {
-        addPresetByJson(gson.toJson(preset), preset.presetName, true)
+    fun addPreset(preset: Preset): File {
+        return addPresetByJson(gson.toJson(preset), preset.presetName, true)
     }
 
     /**
      * addPreset
      * 但不刷新，preset这个livedata不会得到更新
      */
-    fun addPresetSilent(preset: Preset) {
-        addPresetByJson(gson.toJson(preset), preset.presetName, false)
+    fun addPresetSilent(preset: Preset): File {
+        return addPresetByJson(gson.toJson(preset), preset.presetName, false)
     }
 
     // 除了能够确保正确的builtin presets，其它preset不可以调用该方法
-    fun addPresetByJson(json: String, presetName: String, flush: Boolean) {
+    fun addPresetByJson(json: String, presetName: String, flush: Boolean): File {
         val presetFile = File(safeGetPresetDir(context), "${presetName}.preset.json")
         if (presetFile.exists()) throw PresetAddException("preset ${presetName} 已经存在")
         presetFile.createNewFile()
@@ -84,6 +84,8 @@ class PresetRepository @Inject constructor(
         writer.close()
 
         if (flush) flushPresets()
+
+        return presetFile
     }
 
 

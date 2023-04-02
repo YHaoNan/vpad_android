@@ -3,4 +3,7 @@
     <external-path
         name="crashLogPath"
         path="Android/data/top.yudoge.vpad/files/Alarms"/>
+    <external-path
+        name="presetFilePath"
+        path="Android/data/top.yudoge.vpad/files/Download/presets"/>
 </paths>

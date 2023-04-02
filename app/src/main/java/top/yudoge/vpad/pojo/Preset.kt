@@ -32,4 +32,8 @@ data class Preset(
     val regionSpan: Int,
     val padsPerLine: Int,
     val padSettings: List<PadSetting>
-)
+) {
+    fun newPresetFromThis(presetName: String, author: String, description: String): Preset {
+        return Preset(presetName, author, description, this.baseNote, this.regionSpan, this.padsPerLine, this.padSettings)
+    }
+}

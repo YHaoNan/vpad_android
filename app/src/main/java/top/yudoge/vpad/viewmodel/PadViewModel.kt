@@ -1,5 +1,6 @@
 package top.yudoge.vpad.viewmodel
 
+import android.net.Uri
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
@@ -10,11 +11,13 @@ import top.yudoge.vpad.api.*
 import top.yudoge.vpad.domain.PadSettingDomain
 import top.yudoge.vpad.domain.WorkingPresetDomain
 import top.yudoge.vpad.pojo.*
+import top.yudoge.vpad.repository.PresetRepository
 import top.yudoge.vpad.repository.SettingRepository
 import top.yudoge.vpad.toplevel.gson
 import top.yudoge.vpad.toplevel.replace
 import top.yudoge.vpadapi.VPadServer
 import top.yudoge.vpadapi.structure.*
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -24,6 +27,7 @@ import javax.inject.Inject
 class PadViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val workingPresetDomain: WorkingPresetDomain,
+    private val presetRepository: PresetRepository,
     private val settingRepository: SettingRepository,
     private val controlMessageViewmodel: ControlMessageViewmodel
 ) : ViewModel() {
@@ -162,6 +166,11 @@ class PadViewModel @Inject constructor(
     fun closeSettingMode() {
         _settingMode.value = false
         _screenMessage.value = "setting mode closed"
+    }
+
+    fun exportWorkingPreset(name: String, author: String, description: String): File {
+        val preset = workingPresetDomain.workingPreset.value!!
+        return presetRepository.addPreset(preset.newPresetFromThis(name, author, description))
     }
 
     companion object {

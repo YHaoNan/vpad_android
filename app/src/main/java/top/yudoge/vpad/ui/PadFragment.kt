@@ -4,28 +4,29 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.ActivityInfo
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.os.Vibrator
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import top.yudoge.vpad.BuildConfig
 import top.yudoge.vpad.adapter.ButtonGroupAdapter
 import top.yudoge.vpad.adapter.PadContainerAdapter
 import top.yudoge.vpad.databinding.FragmentPadBinding
 import top.yudoge.vpad.di.Pixel
 import top.yudoge.vpad.padtheme.AKaiMPD218PadThemeInitializer
 import top.yudoge.vpad.pojo.ButtonLabel
-import top.yudoge.vpad.toplevel.PadEvent
-import top.yudoge.vpad.toplevel.alert
-import top.yudoge.vpad.toplevel.setOnWheelStateChangeListener
-import top.yudoge.vpad.toplevel.showInputDialog
+import top.yudoge.vpad.toplevel.*
 import top.yudoge.vpad.view.PitchWheelWheelStateChangeListener
 import top.yudoge.vpad.view.UnscrollableRecyclerView.OnDragStateChangedListener
 import top.yudoge.vpad.viewmodel.MainViewModel
@@ -61,6 +62,16 @@ class PadFragment : Fragment() {
             "Pst" -> gotoPresetUI()
             "Col" -> context?.showInputDialog("设置一行pad数", value = padViewModel.workingPreset.value!!.padsPerLine.toString(), null) {
                 padViewModel.setPadsPerLine(it.toInt())
+            }
+            "Exp" -> {
+                context?.showInputDialog("为你的Preset取一个名字", padViewModel.workingPreset.value?.presetName ?: "", null, InputType.TYPE_CLASS_TEXT) {presetName ->
+                    context?.showInputDialog("留下你的名字", padViewModel.workingPreset.value?.author ?: "", null, InputType.TYPE_CLASS_TEXT) {authorName ->
+                        context?.showInputDialog("预设说明", padViewModel.workingPreset.value?.description ?: "", null, InputType.TYPE_CLASS_TEXT) {description ->
+                            val exportedFile = padViewModel.exportWorkingPreset(presetName, authorName, description = description)
+                            requireActivity().share(FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID+".fileprovider", exportedFile))
+                        }
+                    }
+                }
             }
         }
     }
