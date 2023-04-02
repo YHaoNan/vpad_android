@@ -30,7 +30,7 @@ public class UnscrollableRecyclerView extends RecyclerView {
     // 状态栏高度
     private final int statusHeight;
     // drag是否开启
-    private boolean isItemDraggable = true;
+    private boolean isItemDraggable = false;
     // 在一个项目上长按多久触发drag
     private long dragResponseMS = 600;
     // drag时在一个项目范围上多久才算hover
@@ -128,7 +128,7 @@ public class UnscrollableRecyclerView extends RecyclerView {
     }
 
     private void handleReleaseDragItem() {
-        if (onDragStateChangedListener != null) {
+        if (onDragStateChangedListener != null && hasCurrentDragItem()) {
             int underlyingItemPos;
             if ((underlyingItemPos = findUnderlyingItemIndexByPosition((int) lastX, (int) lastY)) != -1) {
                 onDragStateChangedListener.onDragRelease(currentDragItem, currentDragItemPosition, getChildAt(underlyingItemPos), underlyingItemPos);
@@ -147,6 +147,7 @@ public class UnscrollableRecyclerView extends RecyclerView {
     private int predicUnderlyingItemPos = -1;
     private boolean moveOutEmitted = false;
     private void handleMoveAction(MotionEvent ev) {
+        if (!hasCurrentDragItem()) return;
         // 更新位置
         if (currentDragItemCopyLayoutParam != null && currentDragItemCopy != null) {
             currentDragItemCopyLayoutParam.x = (int) lastX - (currentDragItemCopy.getWidth() / 2);
@@ -295,6 +296,6 @@ public class UnscrollableRecyclerView extends RecyclerView {
         void onMoveInAnItem(@NonNull View dragItem, int dragItemPosition, @NonNull View moveInItem, int moveInItemPosition);
         void onMoveOutAnItem(@NonNull View dragItem, int dragItemPosition, @NonNull View moveOutItem, int moveOutItemPosition);
         void onHoverOnAnItem(@NonNull View dragItem, int dragItemPosition, @NonNull View hoverOnItem, int hoverOnItemPosition);
-        void onDragRelease(@NonNull View dragItem, int dragItemPosition, View releaseOnItem, int releaseOnItemPosition);
+        void onDragRelease(@NonNull View dragItem, int dragItemPosition, @Nullable View releaseOnItem, int releaseOnItemPosition);
     }
 }
