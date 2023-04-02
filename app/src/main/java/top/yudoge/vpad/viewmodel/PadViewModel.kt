@@ -71,6 +71,9 @@ class PadViewModel @Inject constructor(
     fun setPadsPerLine(newPadsPerLine: Int) = viewModelScope.launch {
         workingPresetDomain.updatePadsPerLine(newPadsPerLine)
     }
+    fun setRegionSpan(regionSpan: Int) = viewModelScope.launch {
+        workingPresetDomain.updateRegionSpan(regionSpan)
+    }
 
     fun updatePadSettingsBatch() = viewModelScope.launch {
         if (currentDragItem != -1 && copyToPadIndexies.size != 0) {

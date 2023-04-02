@@ -45,6 +45,14 @@ class WorkingPresetDomain @Inject constructor(
         else false
     }
 
+    suspend fun updateRegionSpan(newValue: Int) = updateInJsonFormat {
+        if (it["regionSpan"].asInt != newValue) {
+            it.replace("regionSpan", newValue)
+            true
+        }
+        else false
+    }
+
     /**
      * 在原来的基础上修改baseNote，baseNote += incr
      * incr可以为负数，不过有如下限制，如果当前最大的offset + 修改后的baseNote > 127，则修改失败

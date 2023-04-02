@@ -73,6 +73,11 @@ class PadFragment : Fragment() {
                     }
                 }
             }
+            "Rgn" -> {
+                requireActivity().showInputDialog("设置Rgn+/-跨越的范围", padViewModel.workingPreset.value?.regionSpan.toString() ?: "0", null, InputType.TYPE_CLASS_NUMBER) {
+                    padViewModel.setRegionSpan(it.toInt())
+                }
+            }
         }
     }
 
