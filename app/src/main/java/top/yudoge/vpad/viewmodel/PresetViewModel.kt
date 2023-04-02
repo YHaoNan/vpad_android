@@ -28,4 +28,10 @@ class PresetViewModel @Inject constructor(
             workingPresetViewModel.updateWorkingPreset(gson.toJson(preset))
         }
     }
+    fun deletePreset(preset: Preset) {
+        viewModelScope.launch {
+            presetRepository.deletePreset(preset)
+        }
+    }
+
 }
