@@ -13,8 +13,8 @@
       "velocity": "90",
       "specificModeSetting": {
         "mode": "Chord",
-        "level": "L_7",
-        "type": "MINOR"
+        "type": "MINOR",
+        "level": "L_7"
       }
     },
     {
@@ -24,8 +24,8 @@
       "velocity": "90",
       "specificModeSetting": {
         "mode": "Chord",
-        "level": "L_7",
         "type": "MAJOR",
+        "level": "L_7",
         "transpose": 1
       }
     },
@@ -36,8 +36,8 @@
       "velocity": "90",
       "specificModeSetting": {
         "mode": "Chord",
-        "level": "L_7",
-        "type": "MAJOR"
+        "type": "MAJOR",
+        "level": "L_7"
       }
     },
     {
@@ -47,8 +47,8 @@
       "velocity": "90",
       "specificModeSetting": {
         "mode": "Chord",
-        "level": "L_13",
         "type": "MINOR",
+        "level": "L_13",
         "transpose": 1
       }
     },
@@ -59,8 +59,8 @@
       "velocity": "90",
       "specificModeSetting": {
         "mode": "Chord",
-        "level": "L_13",
         "type": "MAJOR",
+        "level": "L_13",
         "transpose": 2
       }
     },
@@ -71,8 +71,8 @@
       "velocity": "90",
       "specificModeSetting": {
         "mode": "Chord",
-        "level": "L_13",
         "type": "MAJOR",
+        "level": "L_13",
         "transpose": 1
       }
     }

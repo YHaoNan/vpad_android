@@ -1,5 +1,6 @@
 package top.yudoge.vpad.domain
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.asLiveData
@@ -24,6 +25,7 @@ class WorkingPresetDomain @Inject constructor(
 
     // 只允许外界通过Json串来修改Preset，发布给应用的Preset是完全不可变的，应用不可以修改其中的任何数据
     suspend fun updateWorkingPreset(presetJson: String) {
+        Log.i("WorkingPresetDomain", presetJson)
         settingRepository.updateWorkingPreset(presetJson)
     }
 

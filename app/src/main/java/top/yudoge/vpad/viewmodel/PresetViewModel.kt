@@ -1,5 +1,6 @@
 package top.yudoge.vpad.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,9 @@ class PresetViewModel @Inject constructor(
 
     fun setWorkingPreset(preset: Preset) {
         viewModelScope.launch {
+
+            Log.i("gson.toJson", gson.toJson(preset))
+            Log.i("originalPreset", preset.toString())
             workingPresetViewModel.updateWorkingPreset(gson.toJson(preset))
         }
     }
