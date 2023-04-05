@@ -274,8 +274,6 @@ public class UnscrollableRecyclerView extends RecyclerView {
         layoutParams.x = startX;
         layoutParams.y = startY;
         layoutParams.alpha = 0.55f;
-        Log.i("addDragItemCopy", layoutParams.x + "," + layoutParams.y);
-
         layoutParams.width  = width;
         layoutParams.height = height;
         layoutParams.flags  = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE

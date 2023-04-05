@@ -25,7 +25,6 @@ class WorkingPresetDomain @Inject constructor(
 
     // 只允许外界通过Json串来修改Preset，发布给应用的Preset是完全不可变的，应用不可以修改其中的任何数据
     suspend fun updateWorkingPreset(presetJson: String) {
-        Log.i("WorkingPresetDomain", presetJson)
         settingRepository.updateWorkingPreset(presetJson)
     }
 
@@ -94,6 +93,15 @@ class WorkingPresetDomain @Inject constructor(
         return _increaseBaseNote(-rgnSpan)
     }
 
+    suspend fun updatePadsPerLineAndRegionSpan(newPadsPerLine: Int, newRegionSpan: Int) = updateInJsonFormat {
+        if (it["padsPerLine"].asInt == newPadsPerLine && it["regionSpan"].asInt == newRegionSpan) {
+            false
+        } else {
+            it.replace("padsPerLine", newPadsPerLine)
+            it.replace("regionSpan", newRegionSpan)
+            true
+        }
+    }
 
 
 }

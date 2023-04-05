@@ -68,6 +68,10 @@ class PadViewModel @Inject constructor(
         _screenMessage.value = "bpm -> ${bpm}"
     }
 
+    fun updatePadsPerLineAndRegionSpan(newPadsPerLine: Int, newRegionSpan: Int) = viewModelScope.launch {
+        workingPresetDomain.updatePadsPerLineAndRegionSpan(newPadsPerLine, newRegionSpan)
+    }
+
     fun setPadsPerLine(newPadsPerLine: Int) = viewModelScope.launch {
         workingPresetDomain.updatePadsPerLine(newPadsPerLine)
     }
@@ -114,7 +118,7 @@ class PadViewModel @Inject constructor(
 
         _screenMessage.value = "Pad ${padSetting.title} ${if(state == MidiMessage.STATE_ON) "ON" else "OFF"}, note ${baseNote + padSetting.offset} "
 
-        Log.i("PadViewModel", "PadSetting => " + padSetting)
+//        Log.d("PadViewModel", "PadSetting => " + padSetting)
         val note = baseNote + padSetting.offset
         val subSetting = padSetting.specificModeSetting
         when (padSetting.mode) {

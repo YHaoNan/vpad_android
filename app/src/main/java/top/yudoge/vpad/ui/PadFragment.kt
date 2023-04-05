@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -60,9 +61,6 @@ class PadFragment : Fragment() {
                 }
             }
             "Pst" -> gotoPresetUI()
-            "Col" -> context?.showInputDialog("设置一行pad数", value = padViewModel.workingPreset.value!!.padsPerLine.toString(), null) {
-                padViewModel.setPadsPerLine(it.toInt())
-            }
             "Exp" -> {
                 context?.showInputDialog("为你的Preset取一个名字", padViewModel.workingPreset.value?.presetName ?: "", null, InputType.TYPE_CLASS_TEXT) {presetName ->
                     context?.showInputDialog("留下你的名字", padViewModel.workingPreset.value?.author ?: "", null, InputType.TYPE_CLASS_TEXT) {authorName ->
@@ -73,9 +71,13 @@ class PadFragment : Fragment() {
                     }
                 }
             }
-            "Rgn" -> {
-                requireActivity().showInputDialog("设置Rgn+/-跨越的范围", padViewModel.workingPreset.value?.regionSpan.toString() ?: "0", null, InputType.TYPE_CLASS_NUMBER) {
-                    padViewModel.setRegionSpan(it.toInt())
+            "Set" -> {
+                rootView(binding).attachMultipleInputDialog("界面设置",
+                    listOf(
+                        InputEntry("ppl", padViewModel.workingPreset.value!!.padsPerLine.toString(), "Pads Per Line", KeyboardType.Number),
+                        InputEntry("rgn", padViewModel.workingPreset.value!!.regionSpan.toString(), "Region Span", KeyboardType.Number)
+                    )) {
+                    padViewModel.updatePadsPerLineAndRegionSpan(it["ppl"]?.toInt()?:4, it["rgn"]?.toInt()?:16)
                 }
             }
         }
@@ -145,18 +147,14 @@ class PadFragment : Fragment() {
                 dragItemPosition: Int,
                 moveInItem: View,
                 moveInItemPosition: Int
-            ) {
-                Log.i("PadFragment", "MoveInAnItem: " + dragItemPosition + " | " + moveInItemPosition);
-            }
+            ) {}
 
             override fun onMoveOutAnItem(
                 dragItem: View,
                 dragItemPosition: Int,
                 moveOutItem: View,
                 moveOutItemPosition: Int
-            ) {
-                Log.i("PadFragment", "MoveOutAnItem: " + dragItemPosition + " | " + moveOutItemPosition);
-            }
+            ) {}
 
             override fun onHoverOnAnItem(
                 dragItem: View,

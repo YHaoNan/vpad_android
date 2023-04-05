@@ -20,8 +20,7 @@ class ButtonGroupViewModel {
         ButtonLabel("Rgn+"),
         ButtonLabel("Pst"),
         ButtonLabel("Exp"),
-        ButtonLabel("Col"),
-        ButtonLabel("Rgn"),
+        ButtonLabel("Set"),
     )
 
 }

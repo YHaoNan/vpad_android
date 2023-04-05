@@ -70,7 +70,7 @@ class OnFaderStateChanged(private val fader: Fader, private val onHasAMessageToS
         fromUser: Boolean
     ) {
         if (progress > 127 || progress < 0) return
-        Log.i("Fader value changed", progress.toString())
+        Log.d("Fader value changed", progress.toString())
         if (fader.mode == FaderMode.Track) {
             // Change Track Fader
             onHasAMessageToSend(faderViewModel.changeFaderValueMessage(fader.copy(value = progress)))

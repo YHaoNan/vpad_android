@@ -46,17 +46,17 @@ class ChooseVpadServerFragment : Fragment() {
             adapter.clearVpadServer()
             // 添加虚拟Server
             onServerScanned(VirtualVPadServer())
-            Log.i(TAG, "ONSCANSTARTED")
+            Log.d(TAG, "ONSCANSTARTED")
         }
 
         override fun onServerScanned(server: VPadServer) {
             adapter.addVpadServer(server)
-            Log.i(TAG, "ONSERVERSCANNED ${server.toString()}")
+            Log.d(TAG, "ONSERVERSCANNED ${server.toString()}")
         }
 
         override fun onScanEnded() {
             swipeRefresher.isRefreshing = false
-            Log.i(TAG, "ONSCANENDED")
+            Log.d(TAG, "ONSCANENDED")
         }
     }
 

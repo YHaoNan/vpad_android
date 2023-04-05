@@ -1,7 +1,6 @@
 package top.yudoge.vpad.toplevel
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
@@ -18,8 +17,28 @@ import java.io.File
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
+import java.lang.reflect.Modifier
 
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -37,7 +56,7 @@ inline fun Context.showInputDialog(title: String, value: String?, hint: String?,
     }
 
 
-    AlertDialog.Builder(this)
+    android.app.AlertDialog.Builder(this)
         .setView(edit)
         .setTitle(title)
         .setPositiveButton(R.string.sure, DialogInterface.OnClickListener { dialogInterface, i ->
@@ -47,6 +66,50 @@ inline fun Context.showInputDialog(title: String, value: String?, hint: String?,
 
 }
 
+data class InputEntry (val key: String, val value: String, val label: String, val keyboardType: KeyboardType)
+
+inline fun ViewGroup.attachMultipleInputDialog(title: String, inputs: List<InputEntry>, crossinline inputCallback: (values: Map<String, String>) -> Unit) {
+    val container = ComposeView(context)
+    val map = mutableMapOf<String, String>()
+    inputs.forEach {
+        map.put(it.key, it.value)
+    }
+    container.setContent {
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text(text = title) },
+            text = {
+                Column {
+                    inputs.forEach { entry ->
+                        var text by remember { mutableStateOf(TextFieldValue(entry.value)) }
+                        TextField(
+                            value = text,
+                            label = { Text(text = entry.label) },
+                            keyboardOptions = KeyboardOptions(keyboardType = entry.keyboardType),
+                            onValueChange = {
+                                text = it
+                                map.put(entry.key, it.text)
+                            },
+                            enabled = true,
+                            readOnly = false
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {inputCallback.invoke(map); removeView(container)}) { Text(text = "OK") }
+            },
+            dismissButton = {
+                TextButton(onClick = {removeView(container)}) { Text(text = "Cancel") }
+            }
+        )
+    }
+    addView(container)
+}
+
+inline fun Fragment.rootView(binding: ViewBinding) = binding.root as ViewGroup
+inline fun Activity.rootView(binding: ViewBinding) = binding.root as ViewGroup
+
 inline fun Context.showMessageDialog(
     title: String, message: String,
     okLabel: CharSequence = "OK",
@@ -54,7 +117,7 @@ inline fun Context.showMessageDialog(
     cancelLabel: CharSequence = "Cancel",
     cancelCallback: DialogInterface.OnClickListener = DialogInterface.OnClickListener {di, i -> di.dismiss()},
 ) {
-    AlertDialog.Builder(this)
+    android.app.AlertDialog.Builder(this)
         .setTitle(title)
         .setMessage(message)
         .setPositiveButton(okLabel, okCallback)
@@ -62,7 +125,7 @@ inline fun Context.showMessageDialog(
 }
 
 inline fun <T> Context.showListDialog(title: String, list: List<T>, map: (T)->String, crossinline callback: (T) -> Unit) {
-    val dialog = AlertDialog.Builder(this);
+    val dialog = android.app.AlertDialog.Builder(this);
     val adapter = ArrayAdapter<String>(this@showListDialog, android.R.layout.simple_list_item_1, list.map(map));
     dialog
         .setView(ListView(this))
@@ -83,8 +146,8 @@ fun Context.alert(
     },
     negButtonLabel: String? = null , negButtonCallback: ((DialogInterface, Int) -> Unit)? = null,
     cancelable: Boolean = true
-): AlertDialog {
-    val dialogBuilder = AlertDialog.Builder(this)
+): android.app.AlertDialog {
+    val dialogBuilder = android.app.AlertDialog.Builder(this)
         .setTitle(title)
         .setMessage(message)
         .setCancelable(cancelable)
