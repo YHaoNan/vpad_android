@@ -3,7 +3,7 @@
   "author": "Yudoge",
   "description": "A simple & boring 3 x 3 pad.",
   "baseNote": 36,
-  "regionSpan": 16,
+  "regionSpan": 9,
   "padsPerLine": 3,
   "padSettings": [
     {

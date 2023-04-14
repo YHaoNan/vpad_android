@@ -68,8 +68,8 @@ class PadViewModel @Inject constructor(
         _screenMessage.value = "bpm -> ${bpm}"
     }
 
-    fun updatePadsPerLineAndRegionSpan(newPadsPerLine: Int, newRegionSpan: Int) = viewModelScope.launch {
-        workingPresetDomain.updatePadsPerLineAndRegionSpan(newPadsPerLine, newRegionSpan)
+    fun updatePresetParameter(newPadsPerLine: Int, newRegionSpan: Int, newBaseNote: Int) = viewModelScope.launch {
+        workingPresetDomain.updatePresetParameter(newPadsPerLine, newRegionSpan, newBaseNote)
     }
 
     fun setPadsPerLine(newPadsPerLine: Int) = viewModelScope.launch {

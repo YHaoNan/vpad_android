@@ -130,7 +130,7 @@ inline fun <T> Context.showListDialog(title: String, list: List<T>, map: (T)->St
     dialog
         .setView(ListView(this))
         .setTitle(title)
-        .setCancelable(false)
+//        .setCancelable(false)
         .setSingleChoiceItems(adapter, 0) {dialog, which ->
             callback(list.get(which))
             dialog.dismiss();

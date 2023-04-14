@@ -1,6 +1,7 @@
 package top.yudoge.vpad.ui
 
 import android.Manifest
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         mainViewModel.setUpCoroutineExceptionHandler(coroutineExceptionHandler)
 

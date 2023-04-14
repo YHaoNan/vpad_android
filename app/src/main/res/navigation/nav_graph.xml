@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_chooseVpadServerFragment_to_faderFragment"
             app:destination="@id/faderFragment" />
+        <action
+            android:id="@+id/action_chooseVpadServerFragment_to_customCaptureFragment"
+            app:destination="@id/customCaptureFragment" />
     </fragment>
     <fragment
         android:id="@+id/padFragment"
@@ -49,4 +52,8 @@
         android:id="@+id/presetFragment"
         android:name="top.yudoge.vpad.ui.PresetFragment"
         android:label="PresetFragment" />
+    <fragment
+        android:id="@+id/customCaptureFragment"
+        android:name="top.yudoge.vpad.ui.CustomCaptureFragment"
+        android:label="CustomCaptureFragment" />
 </navigation>

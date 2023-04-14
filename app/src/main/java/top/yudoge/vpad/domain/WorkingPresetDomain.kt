@@ -93,12 +93,13 @@ class WorkingPresetDomain @Inject constructor(
         return _increaseBaseNote(-rgnSpan)
     }
 
-    suspend fun updatePadsPerLineAndRegionSpan(newPadsPerLine: Int, newRegionSpan: Int) = updateInJsonFormat {
-        if (it["padsPerLine"].asInt == newPadsPerLine && it["regionSpan"].asInt == newRegionSpan) {
+    suspend fun updatePresetParameter(newPadsPerLine: Int, newRegionSpan: Int, newBaseNote: Int) = updateInJsonFormat {
+        if (it["padsPerLine"].asInt == newPadsPerLine && it["regionSpan"].asInt == newRegionSpan && it["baseNote"].asInt == newBaseNote) {
             false
         } else {
             it.replace("padsPerLine", newPadsPerLine)
             it.replace("regionSpan", newRegionSpan)
+            it.replace("baseNote", newBaseNote)
             true
         }
     }

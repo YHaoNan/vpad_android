@@ -56,10 +56,20 @@ class NetworkInterfacceIPGenerator : LANIPGenerator {
             val endIpAddress = getMaxAddress(addressByteArray, prefixLength)
             (if (startIpAddress > endIpAddress) (endIpAddress ..startIpAddress - 1) else (startIpAddress ..endIpAddress - 1)).forEach {
                 val ipByteArray = fromInt4ToByte(it)
-                val ipString = Inet4Address.getByAddress(ipByteArray).hostName
+                val ipString = byteArrayToIpString(ipByteArray)
                 ipList.add(ipString)
             }
         }
         return ipList
+    }
+
+    private fun byteArrayToIpString(byteArray: ByteArray): String{
+        return "${b2ui(byteArray[0])}.${b2ui(byteArray[1])}.${b2ui(byteArray[2])}.${b2ui(byteArray[3])}"
+    }
+
+    private fun b2ui(byte: Byte): Int {
+        Byte.MIN_VALUE
+        return if (byte < 0) byte + 256
+        else byte.toInt()
     }
 }

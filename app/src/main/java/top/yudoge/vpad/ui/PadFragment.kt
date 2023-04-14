@@ -27,6 +27,7 @@ import top.yudoge.vpad.databinding.FragmentPadBinding
 import top.yudoge.vpad.di.Pixel
 import top.yudoge.vpad.padtheme.AKaiMPD218PadThemeInitializer
 import top.yudoge.vpad.pojo.ButtonLabel
+import top.yudoge.vpad.repository.VPadServerRepository
 import top.yudoge.vpad.toplevel.*
 import top.yudoge.vpad.view.PitchWheelWheelStateChangeListener
 import top.yudoge.vpad.view.UnscrollableRecyclerView.OnDragStateChangedListener
@@ -72,12 +73,13 @@ class PadFragment : Fragment() {
                 }
             }
             "Set" -> {
-                rootView(binding).attachMultipleInputDialog("界面设置",
+                rootView(binding).attachMultipleInputDialog("Preset参数设置",
                     listOf(
-                        InputEntry("ppl", padViewModel.workingPreset.value!!.padsPerLine.toString(), "Pads Per Line", KeyboardType.Number),
-                        InputEntry("rgn", padViewModel.workingPreset.value!!.regionSpan.toString(), "Region Span", KeyboardType.Number)
+                        InputEntry("ppl", padViewModel.workingPreset.value!!.padsPerLine.toString(), "一行Pad数", KeyboardType.Number),
+                        InputEntry("rgn", padViewModel.workingPreset.value!!.regionSpan.toString(), "音域跨度", KeyboardType.Number),
+                        InputEntry("bsn", padViewModel.workingPreset.value!!.baseNote.toString(), "开始音符", KeyboardType.Number)
                     )) {
-                    padViewModel.updatePadsPerLineAndRegionSpan(it["ppl"]?.toInt()?:4, it["rgn"]?.toInt()?:16)
+                    padViewModel.updatePresetParameter(it["ppl"]?.toInt()?:4, it["rgn"]?.toInt()?:16, it["bsn"]?.toInt()?:34)
                 }
             }
         }

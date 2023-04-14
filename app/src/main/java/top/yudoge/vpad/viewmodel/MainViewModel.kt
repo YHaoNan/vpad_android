@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import top.yudoge.vpad.api.CommunicatorHolder
 import top.yudoge.vpad.api.VPadServerCommunicator
 import top.yudoge.vpad.repository.PresetRepository
+import top.yudoge.vpad.repository.VPadServerRepository
 import top.yudoge.vpad.toplevel.safeGetPresetDir
 import top.yudoge.vpadapi.Constants
 import top.yudoge.vpadapi.VPadServer
@@ -30,50 +31,15 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     val presetRepository: PresetRepository,
+    val vPadServerRepository: VPadServerRepository,
     @ApplicationContext val context: Context
-): ViewModel(), CommunicatorHolder {
+): ViewModel() {
+    private lateinit var globalCoroutineExceptionHandler: CoroutineExceptionHandler;
 
-    private var vpadServer: VPadServer? = null
-    private var communicator: VPadServerCommunicator? = null
-    private lateinit var coroutineExceptionHandler: CoroutineExceptionHandler
-
-
-    fun setUpVPadServer(vpadServer: VPadServer) {
-        this.vpadServer = vpadServer
+    fun sendMessageToServer(message: Message) = viewModelScope.launch(globalCoroutineExceptionHandler) {
+        vPadServerRepository.sendMessage(message)
     }
 
-    fun setUpCoroutineExceptionHandler(handler: CoroutineExceptionHandler) {
-        this.coroutineExceptionHandler = handler
-    }
-    fun getCommunicator(): VPadServerCommunicator? {
-        return communicator
-    }
-
-    override fun setUpCommunicator(communicator: VPadServerCommunicator) {
-        this.communicator = communicator
-    }
-
-    override fun canConnectNow() {
-        if (vpadServer == null) throw IllegalStateException("When communicator can connect, a vpadServer instance must passed via `setUpVPadServer`")
-        if (communicator == null) throw IllegalStateException("canConnectNow must call via `VPadCommunicator`")
-        viewModelScope.launch(coroutineExceptionHandler) {
-            communicator!!.connectTo(vpadServer!!)
-        }
-    }
-
-    override fun mustDisconnect() {
-        if (communicator == null) throw IllegalStateException("mustDisconnect must call via `VPadCommunicator`")
-        viewModelScope.launch(coroutineExceptionHandler) {
-            communicator!!.close()
-        }
-    }
-
-
-    fun sendMessageToServer(message: Message) = viewModelScope.launch(coroutineExceptionHandler) {
-        if (communicator == null) throw IllegalStateException("No communicator instance")
-        Log.d(TAG, "send message to server" + message.toString())
-        communicator!!.sendMessageToServer(message)
-    }
 
     fun makeSureBuiltinPresetHasExported() {
         // 如果文件夹已经存在，代表已经建立
@@ -86,6 +52,10 @@ class MainViewModel @Inject constructor(
                 presetName, false
             )
         }
+    }
+
+    fun setUpCoroutineExceptionHandler(coroutineExceptionHandler: CoroutineExceptionHandler) {
+        globalCoroutineExceptionHandler = coroutineExceptionHandler
     }
 
     companion object {

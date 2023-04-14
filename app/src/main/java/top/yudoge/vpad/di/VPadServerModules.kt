@@ -20,15 +20,6 @@ object VPadServerModules {
     fun provideLanIPGenerator(): LANIPGenerator {
         return NetworkInterfacceIPGenerator()
     }
-
-    @Singleton
-    @Provides
-    fun provideVPadServerScanner(
-        lanipGenerator: LANIPGenerator
-    ): VPadServerScanner {
-        return VPadServerScanner(lanipGenerator)
-    }
-
     @Provides
     fun provideVPadClient(): VPadClient {
         return DefaultVPadClient()

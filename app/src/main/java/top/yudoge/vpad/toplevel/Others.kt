@@ -16,6 +16,7 @@ import top.yudoge.vpad.viewmodel.MainViewModel
 import top.yudoge.vpadapi.structure.CCMessage
 import top.yudoge.vpadapi.structure.Message
 import java.io.File
+import java.net.NetworkInterface
 
 
 fun SeekBar.setOnWheelStateChangeListener(wheelStateChangeListener: WheelStateChangeListener) {
@@ -108,3 +109,13 @@ fun safeGetPresetDir(context: Context): File {
 
     return presetDir
 }
+
+fun NetworkInterface.getIpv4AddressNullable() = this.inetAddresses.toList().find { it.address.size == 4 }
+/**
+ * crash when interface has no ipv4 address
+ */
+fun NetworkInterface.getIpv4Address() = this.inetAddresses.toList().find { it.address.size == 4 }!!
+fun NetworkInterface.getLabel() = "${this.displayName}@${this.getIpv4Address()}"
+
+fun List<NetworkInterface>.allIpv4AndNotLoopbackIfaces() = filter { !it.isLoopback && it.getIpv4AddressNullable() != null }
+

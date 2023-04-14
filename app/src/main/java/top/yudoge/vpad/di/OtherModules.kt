@@ -9,6 +9,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import top.yudoge.vpad.api.CommunicatorHolder
 import top.yudoge.vpad.domain.PadSettingDomain
+import top.yudoge.vpadapi.DefaultVPadClient
+import top.yudoge.vpadapi.VPadClient
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
