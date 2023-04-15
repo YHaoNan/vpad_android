@@ -31,6 +31,8 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
 
     @Override
     public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
+        e.printStackTrace();
+
         SimpleDateFormat dataFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
         File crashLogFile = ContextExtsKt.getCrashLog(context);
         Log.i(TAG, "CRASH LOG FILE " + crashLogFile);

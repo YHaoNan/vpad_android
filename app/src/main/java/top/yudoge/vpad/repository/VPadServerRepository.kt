@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import top.yudoge.vpad.api.VirtualVPadConnection
+import top.yudoge.vpad.api.VirtualVPadServer
 import top.yudoge.vpadapi.ClientException
 import top.yudoge.vpadapi.DefaultVPadClient
 import top.yudoge.vpadapi.VPadClient
@@ -63,7 +65,11 @@ class VPadServerRepository @Inject constructor(
     suspend fun setupCurrentServer(vPadServer: VPadServer) {
         if (_currentServer.value!=null) throw ClientException("Holding a server now, please remove it first")
         withContext(Dispatchers.IO) {
-            currentConn = connectTo(vPadServer.ip)
+            currentConn = if (vPadServer is VirtualVPadServer) {
+                VirtualVPadConnection()
+            } else {
+                connectTo(vPadServer.ip)
+            }
             _currentServer.postValue(vPadServer)
         }
     }
@@ -97,6 +103,7 @@ class VPadServerRepository @Inject constructor(
      * @throws ClientException 若连接过程中发生任何异常导致无法连接
      * @return 代表此次连接的VPadConnection对象
      */
-    private suspend fun connectTo(ipAddress: String) = vPadClient.connect(VPadServer(ipAddress, "", "", 0))
+    private suspend fun connectTo(ipAddress: String) =
+        vPadClient.connect(VPadServer(ipAddress, "", "", 0))
 
 }
