@@ -1,5 +1,7 @@
 package top.yudoge.vpad.pojo
 
+import java.util.*
+
 /**
  * 在VPad中，软件所展示的打击垫UI来源于一个Preset，也就是预制
  * Preset规定了当前的基音符，规定了用户调用Rgn+和Rgn-时，基音符
@@ -36,4 +38,6 @@ data class Preset(
     fun newPresetFromThis(presetName: String, author: String, description: String): Preset {
         return Preset(presetName, author, description, this.baseNote, this.regionSpan, this.padsPerLine, this.padSettings)
     }
+
+    fun toPresetRecord(targetFile: String) = PresetRecord(0, presetName, author, description, targetFile, Date().time)
 }

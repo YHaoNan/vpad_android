@@ -2,8 +2,8 @@ package top.yudoge.vpad.ui
 
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -15,7 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,12 +28,10 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import top.yudoge.vpad.BuildConfig
-import top.yudoge.vpad.pojo.Preset
+import top.yudoge.vpad.pojo.PresetRecord
 import top.yudoge.vpad.toplevel.Constants
 import top.yudoge.vpad.toplevel.share
-import top.yudoge.vpad.toplevel.showInputDialog
 import top.yudoge.vpad.toplevel.showMessageDialog
 import top.yudoge.vpad.viewmodel.PresetViewModel
 import java.io.File
@@ -41,7 +39,6 @@ import java.io.File
 @AndroidEntryPoint
 class PresetFragment : Fragment() {
     private val viewModel: PresetViewModel by viewModels()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,12 +49,14 @@ class PresetFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
-        viewModel.flushPresets()
         setContent {
-            val presets =  viewModel.preset.observeAsState()
+//            val presets =  viewModel.preset.observeAsState()
+            val presetRecords = viewModel.getAllPresetRecordOrderByName("").collectAsState(listOf())
+
             MaterialTheme {
                 Surface {
-                    presets.value?.let {
+                    presetRecords.value?.let {
+                        Log.i("PresetFragment", it.joinToString(","))
                         LazyColumn(Modifier.padding(10.dp)) {
                             items(it, key = {item -> item.presetName}) {
                                 PresetItem(preset = it, Modifier.clickable { // 点击弹出详情
@@ -80,7 +79,7 @@ class PresetFragment : Fragment() {
 
     @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
     @Composable
-    fun PresetItem(preset: Preset, modifier: Modifier = Modifier, onChoose: () -> Unit) {
+    fun PresetItem(preset: PresetRecord, modifier: Modifier = Modifier, onChoose: () -> Unit) {
         SwipeToDismiss(
             state = rememberDismissState(
                 confirmStateChange = {
@@ -127,8 +126,18 @@ class PresetFragment : Fragment() {
     @Composable
     fun SwipeBackground() {
         Row {
-            Text(text = "Share", modifier = Modifier.align(Alignment.CenterVertically).weight(1f).fillMaxHeight().background(Color.Green).padding(start = 10.dp), color = Color.Black)
-            Text(text = "Delete", textAlign = TextAlign.End, modifier = Modifier.align(Alignment.CenterVertically).weight(1f).fillMaxHeight().background(Color.Red).padding(end = 10.dp), color = Color.White)
+            Text(text = "Share", modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .weight(1f)
+                .fillMaxHeight()
+                .background(Color.Green)
+                .padding(start = 10.dp), color = Color.Black)
+            Text(text = "Delete", textAlign = TextAlign.End, modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .weight(1f)
+                .fillMaxHeight()
+                .background(Color.Red)
+                .padding(end = 10.dp), color = Color.White)
         }
     }
 

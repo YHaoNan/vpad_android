@@ -2,24 +2,21 @@ package top.yudoge.vpad.viewmodel
 
 import android.content.Context
 import android.os.Environment
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import top.yudoge.vpad.api.CommunicatorHolder
-import top.yudoge.vpad.api.VPadServerCommunicator
-import top.yudoge.vpad.repository.PresetRepository
+import top.yudoge.vpad.domain.PresetDomain
+import top.yudoge.vpad.pojo.Preset
+import top.yudoge.vpad.repository.PresetFileRepository
 import top.yudoge.vpad.repository.VPadServerRepository
-import top.yudoge.vpad.toplevel.safeGetPresetDir
-import top.yudoge.vpadapi.Constants
-import top.yudoge.vpadapi.VPadServer
+import top.yudoge.vpad.toplevel.gson
 import top.yudoge.vpadapi.structure.Message
 import java.io.File
+import java.io.FileReader
 import java.io.InputStreamReader
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 /**
@@ -30,8 +27,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val presetRepository: PresetRepository,
     val vPadServerRepository: VPadServerRepository,
+    val presetDomain: PresetDomain,
     @ApplicationContext val context: Context
 ): ViewModel() {
     private lateinit var globalCoroutineExceptionHandler: CoroutineExceptionHandler;
@@ -42,15 +39,15 @@ class MainViewModel @Inject constructor(
 
 
     fun makeSureBuiltinPresetHasExported() {
-        // 如果文件夹已经存在，代表已经建立
-        if (File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), top.yudoge.vpad.toplevel.Constants.PRESET_DIR).exists()) return
+        viewModelScope.launch {
+            // 如果文件夹已经存在，代表已经建立
+            if (File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), top.yudoge.vpad.toplevel.Constants.PRESET_DIR).exists()) return@launch
 
-        top.yudoge.vpad.toplevel.Constants.BUILTIN_PRESET_FILE_NAMES.forEach {
-            val presetName = it.substring(it.lastIndexOf("/") + 1, it.indexOf("."))
-            presetRepository.addPresetByJson(
-                InputStreamReader(context.assets.open(it)).readText(),
-                presetName, false
-            )
+            top.yudoge.vpad.toplevel.Constants.BUILTIN_PRESET_FILE_NAMES.forEach {
+                val fileContent = InputStreamReader(context.assets.open(it)).readText()
+                val preset = gson.fromJson(fileContent, Preset::class.java)
+                presetDomain.addPreset(preset)
+            }
         }
     }
 

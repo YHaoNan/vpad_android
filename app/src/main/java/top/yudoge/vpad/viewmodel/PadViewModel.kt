@@ -1,17 +1,15 @@
 package top.yudoge.vpad.viewmodel
 
-import android.net.Uri
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
 import com.google.gson.JsonParser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import top.yudoge.vpad.api.*
-import top.yudoge.vpad.domain.PadSettingDomain
+import top.yudoge.vpad.domain.PresetDomain
 import top.yudoge.vpad.domain.WorkingPresetDomain
 import top.yudoge.vpad.pojo.*
-import top.yudoge.vpad.repository.PresetRepository
+import top.yudoge.vpad.repository.PresetFileRepository
 import top.yudoge.vpad.repository.SettingRepository
 import top.yudoge.vpad.toplevel.gson
 import top.yudoge.vpad.toplevel.replace
@@ -27,7 +25,7 @@ import javax.inject.Inject
 class PadViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val workingPresetDomain: WorkingPresetDomain,
-    private val presetRepository: PresetRepository,
+    private val presetDomain: PresetDomain,
     private val settingRepository: SettingRepository,
     private val controlMessageViewmodel: ControlMessageViewmodel
 ) : ViewModel() {
@@ -175,9 +173,11 @@ class PadViewModel @Inject constructor(
         _screenMessage.value = "setting mode closed"
     }
 
-    fun exportWorkingPreset(name: String, author: String, description: String): File {
-        val preset = workingPresetDomain.workingPreset.value!!
-        return presetRepository.addPreset(preset.newPresetFromThis(name, author, description))
+    fun exportWorkingPreset(name: String, author: String, description: String) {
+        viewModelScope.launch {
+            val preset = workingPresetDomain.workingPreset.value!!
+            presetDomain.addPreset(preset.newPresetFromThis(name, author, description))
+        }
     }
 
     companion object {

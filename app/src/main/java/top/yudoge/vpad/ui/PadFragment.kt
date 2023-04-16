@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -66,8 +67,8 @@ class PadFragment : Fragment() {
                 context?.showInputDialog("为你的Preset取一个名字", padViewModel.workingPreset.value?.presetName ?: "", null, InputType.TYPE_CLASS_TEXT) {presetName ->
                     context?.showInputDialog("留下你的名字", padViewModel.workingPreset.value?.author ?: "", null, InputType.TYPE_CLASS_TEXT) {authorName ->
                         context?.showInputDialog("预设说明", padViewModel.workingPreset.value?.description ?: "", null, InputType.TYPE_CLASS_TEXT) {description ->
-                            val exportedFile = padViewModel.exportWorkingPreset(presetName, authorName, description = description)
-                            requireActivity().share(FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID+".fileprovider", exportedFile))
+                            padViewModel.exportWorkingPreset(presetName, authorName, description = description)
+                            Toast.makeText(requireContext(), "导出成功", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
