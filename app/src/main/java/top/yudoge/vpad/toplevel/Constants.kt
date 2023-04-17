@@ -5,12 +5,12 @@ import top.yudoge.vpad.pojo.FaderMode
 
 object Constants {
     const val DB_NAME = "vpad.db"
-    const val DEFAULT_PAD_SETTING_FILE_NAME = "default_pad_setting.json"
     const val DEFAULT_PRESET_FILE_NAME = "builtin_presets/3 x 3 Pad.preset.json"
     val BUILTIN_PRESET_FILE_NAMES = listOf<String>(
         "builtin_presets/4 x 4 Pad.preset.json",
         "builtin_presets/3 x 3 Pad.preset.json",
-        "builtin_presets/2-5-1 Chord.preset.json"
+        "builtin_presets/2-5-1 Chord.preset.json",
+        "builtin_presets/Lofi Chord.preset.json"
     )
     const val DEFAULT_BPM: Int = 130
     const val DEFAULT_BASE: Int = 35

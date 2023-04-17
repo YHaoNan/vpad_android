@@ -1,0 +1,62 @@
+{
+  "author": "Yudoge",
+  "baseNote": 54,
+  "description": "chillin!",
+  "padSettings": [
+    {
+      "mode": "Chord",
+      "offset": 0,
+      "specificModeSetting": {
+        "arpPct": 10,
+        "level": "L_9",
+        "transpose": 0,
+        "type": "MAJOR",
+        "mode": "Chord"
+      },
+      "title": "CMaj9",
+      "velocity": 90
+    },
+    {
+      "mode": "Chord",
+      "offset": 5,
+      "specificModeSetting": {
+        "arpPct": 10,
+        "level": "L_9",
+        "transpose": 1,
+        "type": "MAJOR",
+        "mode": "Chord"
+      },
+      "title": "4Maj9",
+      "velocity": 90
+    },
+    {
+      "mode": "Chord",
+      "offset": 7,
+      "specificModeSetting": {
+        "arpPct": 10,
+        "level": "L_11",
+        "transpose": 0,
+        "type": "DOM",
+        "mode": "Chord"
+      },
+      "title": "G11",
+      "velocity": 90
+    },
+    {
+      "mode": "Chord",
+      "offset": 4,
+      "specificModeSetting": {
+        "arpPct": 10,
+        "level": "L_11",
+        "transpose": 1,
+        "type": "MINOR",
+        "mode": "Chord"
+      },
+      "title": "3Min11",
+      "velocity": 90
+    }
+  ],
+  "padsPerLine": 3,
+  "presetName": "Lofi Chord",
+  "regionSpan": 1
+}

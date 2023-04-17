@@ -35,6 +35,12 @@ class PresetViewModel @Inject constructor(
         }
     }
 
+    fun importPreset(preset: Preset) {
+        viewModelScope.launch {
+            presetDomain.addPreset(preset)
+        }
+    }
+
     fun deletePreset(preset: PresetRecord) {
         viewModelScope.launch {
             presetDomain.deletePreset(preset)

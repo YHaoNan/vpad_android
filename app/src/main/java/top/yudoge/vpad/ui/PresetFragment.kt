@@ -1,40 +1,53 @@
 package top.yudoge.vpad.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.AndroidEntryPoint
 import top.yudoge.vpad.BuildConfig
+import top.yudoge.vpad.R
+import top.yudoge.vpad.pojo.Preset
 import top.yudoge.vpad.pojo.PresetRecord
 import top.yudoge.vpad.toplevel.Constants
+import top.yudoge.vpad.toplevel.gson
 import top.yudoge.vpad.toplevel.share
 import top.yudoge.vpad.toplevel.showMessageDialog
 import top.yudoge.vpad.viewmodel.PresetViewModel
 import java.io.File
+import java.io.InputStreamReader
+
 
 @AndroidEntryPoint
 class PresetFragment : Fragment() {
@@ -51,29 +64,87 @@ class PresetFragment : Fragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
 //            val presets =  viewModel.preset.observeAsState()
-            val presetRecords = viewModel.getAllPresetRecordOrderByName("").collectAsState(listOf())
+            var filter by remember { mutableStateOf("") }
+            val presetRecords = viewModel.getAllPresetRecordOrderByName(filter).collectAsState(listOf())
 
             MaterialTheme {
                 Surface {
                     presetRecords.value?.let {
-                        Log.i("PresetFragment", it.joinToString(","))
-                        LazyColumn(Modifier.padding(10.dp)) {
-                            items(it, key = {item -> item.presetName}) {
-                                PresetItem(preset = it, Modifier.clickable { // 点击弹出详情
-                                    context.showMessageDialog("${it.presetName} by ${it.author}", it.description)
-                                }) {
-                                    // 选中该preset的回调
-                                    context.showMessageDialog("确定", "确定要加载${it.presetName}作为当前的工作预制吗？", okCallback = {iface, i ->
-                                        viewModel.setWorkingPreset(it)
-                                        iface.dismiss()
-                                        Toast.makeText(context, "成功", Toast.LENGTH_SHORT).show()
-                                    })
+                        Column {
+                            TopBar(onSearch = {
+                                filter = it
+                            }, onImport = {
+                                openFileChoosor()
+                            })
+                            LazyColumn(Modifier.padding(10.dp)) {
+                                items(it, key = {item -> item.presetName}) {
+                                    PresetItem(preset = it, Modifier.clickable { // 点击弹出详情
+                                        context.showMessageDialog("${it.presetName} by ${it.author}", it.description)
+                                    }) {
+                                        // 选中该preset的回调
+                                        context.showMessageDialog("确定", "确定要加载${it.presetName}作为当前的工作预制吗？", okCallback = {iface, i ->
+                                            viewModel.setWorkingPreset(it)
+                                            iface.dismiss()
+                                            Toast.makeText(context, "成功", Toast.LENGTH_SHORT).show()
+                                        })
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+    var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+        {result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.apply {
+                    try {
+                        val content = InputStreamReader(requireContext().contentResolver.openInputStream(this)).readText()
+                        viewModel.importPreset(gson.fromJson(content, Preset::class.java))
+                    } catch (e: JsonSyntaxException) {
+                        Toast.makeText(requireContext(), "貌似不是一个合法的preset文件", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    )
+    private fun openFileChoosor() {
+        Intent().apply {
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            setAction(Intent.ACTION_GET_CONTENT)
+            setType("application/json")
+            resultLauncher.launch(this)
+        }
+    }
+
+    // 头部搜索框 + 导入按钮
+    @Composable
+    fun TopBar(onSearch: (String)->Unit, onImport: ()->Unit) {
+        var text by remember { mutableStateOf("") }
+        Row(modifier =  Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
+            OutlinedTextField(
+                value = text,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = {onSearch(text)}),
+                onValueChange = { text = it },
+                label = { Text(text = "filter")},
+                modifier = Modifier.weight(1f),
+                trailingIcon = {
+                    Row {
+                        IconButton(onClick = { text=""; onSearch(text) }) {
+                            Icon(painter = painterResource(id = R.drawable.baseline_clear_24), contentDescription = "")
+                        }
+                        TextButton(onClick = { onImport() }) {
+                            Text(text = "导入")
+                        }
+                    }
+                }
+            )
         }
     }
 
