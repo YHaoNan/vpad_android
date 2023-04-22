@@ -2,6 +2,7 @@ package top.yudoge.vpad.viewmodel
 
 import android.content.Context
 import android.os.Environment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +14,7 @@ import top.yudoge.vpad.pojo.Preset
 import top.yudoge.vpad.repository.PresetFileRepository
 import top.yudoge.vpad.repository.VPadServerRepository
 import top.yudoge.vpad.toplevel.gson
+import top.yudoge.vpadapi.VPadServer
 import top.yudoge.vpadapi.structure.Message
 import java.io.File
 import java.io.FileReader
@@ -27,11 +29,12 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val vPadServerRepository: VPadServerRepository,
-    val presetDomain: PresetDomain,
-    @ApplicationContext val context: Context
+    private val vPadServerRepository: VPadServerRepository,
+    private val presetDomain: PresetDomain,
+    private @ApplicationContext val context: Context
 ): ViewModel() {
     private lateinit var globalCoroutineExceptionHandler: CoroutineExceptionHandler;
+    val currentServer: LiveData<VPadServer?> = vPadServerRepository.currentServer
 
     fun sendMessageToServer(message: Message) = viewModelScope.launch(globalCoroutineExceptionHandler) {
         vPadServerRepository.sendMessage(message)
@@ -53,6 +56,12 @@ class MainViewModel @Inject constructor(
 
     fun setUpCoroutineExceptionHandler(coroutineExceptionHandler: CoroutineExceptionHandler) {
         globalCoroutineExceptionHandler = coroutineExceptionHandler
+    }
+
+    fun cleanUpConnectedServer() = viewModelScope.launch {
+        if (vPadServerRepository.currentServer.value!=null) {
+            vPadServerRepository.removeCurrentServer()
+        }
     }
 
     companion object {

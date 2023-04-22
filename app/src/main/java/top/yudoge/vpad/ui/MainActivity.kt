@@ -50,6 +50,12 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.setUpCoroutineExceptionHandler(coroutineExceptionHandler)
 
         setContentView(R.layout.activity_main)
+
+        mainViewModel.currentServer.observe(this) {
+            if (it == null) setTitle("VPad [未连接]")
+            else setTitle("${it.name}@${it.ip}")
+        }
+
         // 检测权限，并使用权限列表中的下标作为requestCode
         checkAndRequestPermissions(permissions.map { it.permission }, permissions.mapIndexed {i,p -> i})
         // 检测是否有未捕获异常
@@ -97,6 +103,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mainViewModel.cleanUpConnectedServer()
+    }
     // Prevent destroy on orientation changed
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)

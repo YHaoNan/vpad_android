@@ -50,8 +50,10 @@ class ChooseVpadServerFragmentViewModel @Inject constructor(
         }
     }
 
-    fun removeCurrentServer() = viewModelScope.launch {
-        vPadServerRepository.removeCurrentServer()
+    fun removeCurrentServer() {
+        viewModelScope.launch {
+            vPadServerRepository.removeCurrentServer()
+        }
     }
 
     fun hasCurrentServer() = vPadServerRepository.currentServer.value != null

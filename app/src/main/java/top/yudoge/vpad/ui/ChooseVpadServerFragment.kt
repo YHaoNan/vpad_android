@@ -65,6 +65,12 @@ class ChooseVpadServerFragment : Fragment() {
     private val viewModel: ChooseVpadServerFragmentViewModel by viewModels()
     @Inject lateinit var vpadClient: VPadClient
 
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.hasCurrentServer())
+            viewModel.removeCurrentServer()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,17 +82,6 @@ class ChooseVpadServerFragment : Fragment() {
             Page()
         }
     }
-
-
-    override fun onResume() {
-        super.onResume()
-        Log.i("CVSF", "onResume")
-        if (viewModel.hasCurrentServer()) {
-            viewModel.removeCurrentServer()
-            Log.i("CVSF", "removeCurrentServer")
-        }
-    }
-
 
     @Composable
     fun Page() {
@@ -182,7 +177,6 @@ class ChooseVpadServerFragment : Fragment() {
             viewModel.selectInterface(it)
         }
     }
-
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun ServerListItem(vPadServer: VPadServer) {
