@@ -11,6 +11,7 @@
       "title": "2Min7",
       "mode": "Chord",
       "velocity": "90",
+      "triggerMode": "Trigger",
       "specificModeSetting": {
         "mode": "Chord",
         "type": "MINOR",
@@ -22,6 +23,7 @@
       "title": "5Maj7",
       "mode": "Chord",
       "velocity": "90",
+      "triggerMode": "Trigger",
       "specificModeSetting": {
         "mode": "Chord",
         "type": "MAJOR",
@@ -34,6 +36,7 @@
       "title": "1Maj7",
       "mode": "Chord",
       "velocity": "90",
+      "triggerMode": "Trigger",
       "specificModeSetting": {
         "mode": "Chord",
         "type": "MAJOR",
@@ -45,6 +48,7 @@
       "title": "2Min13",
       "mode": "Chord",
       "velocity": "90",
+      "triggerMode": "Trigger",
       "specificModeSetting": {
         "mode": "Chord",
         "type": "MINOR",
@@ -57,6 +61,7 @@
       "title": "5Maj13",
       "mode": "Chord",
       "velocity": "90",
+      "triggerMode": "Trigger",
       "specificModeSetting": {
         "mode": "Chord",
         "type": "MAJOR",
@@ -69,6 +74,7 @@
       "title": "1Maj13",
       "mode": "Chord",
       "velocity": "90",
+      "triggerMode": "Trigger",
       "specificModeSetting": {
         "mode": "Chord",
         "type": "MAJOR",

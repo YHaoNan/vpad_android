@@ -11,6 +11,7 @@
       "title": "Pad6",
       "mode": "Pad",
       "velocity": 90,
+      "triggerMode": "Trigger",
       "specificModeSetting": {"mode": "Pad"}
     },
     {
@@ -18,6 +19,7 @@
       "title": "Pad7",
       "mode": "Pad",
       "velocity": 90,
+      "triggerMode": "Trigger",
       "specificModeSetting": {"mode": "Pad"}
     },
     {
@@ -25,6 +27,7 @@
       "title": "Pad8",
       "mode": "Pad",
       "velocity": 90,
+      "triggerMode": "Trigger",
       "specificModeSetting": {"mode": "Pad"}
     },
     {
@@ -32,6 +35,7 @@
       "title": "Pad3",
       "mode": "Pad",
       "velocity": 90,
+      "triggerMode": "Trigger",
       "specificModeSetting": {"mode": "Pad"}
     },
     {
@@ -39,6 +43,7 @@
       "title": "Pad4",
       "mode": "Pad",
       "velocity": 90,
+      "triggerMode": "Trigger",
       "specificModeSetting": {"mode": "Pad"}
     },
     {
@@ -46,6 +51,7 @@
       "title": "Pad5",
       "mode": "Pad",
       "velocity": 90,
+      "triggerMode": "Trigger",
       "specificModeSetting": {"mode": "Pad"}
     },
     {
@@ -53,6 +59,7 @@
       "title": "Pad0",
       "mode": "Pad",
       "velocity": 90,
+      "triggerMode": "Trigger",
       "specificModeSetting": {"mode": "Pad"}
     },
     {
@@ -60,6 +67,7 @@
       "title": "Pad1",
       "mode": "Pad",
       "velocity": 90,
+      "triggerMode": "Trigger",
       "specificModeSetting": {"mode": "Pad"}
     },
     {
@@ -67,6 +75,7 @@
       "title": "Pad2",
       "mode": "Pad",
       "velocity": 90,
+      "triggerMode": "Trigger",
       "specificModeSetting": {"mode": "Pad"}
     }
   ]

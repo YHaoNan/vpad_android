@@ -227,6 +227,14 @@ class PadFragment : Fragment() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        binding.padContainer.adapter?.let {
+            it as PadContainerAdapter
+            it.deactiveAllPad()
+        }
+    }
+
     companion object {
         const val TAG = "PadFragment"
     }

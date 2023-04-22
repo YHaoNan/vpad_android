@@ -11,6 +11,7 @@ import top.yudoge.vpad.domain.WorkingPresetDomain
 import top.yudoge.vpad.pojo.*
 import top.yudoge.vpad.repository.PresetFileRepository
 import top.yudoge.vpad.repository.SettingRepository
+import top.yudoge.vpad.toplevel.TriggerMode
 import top.yudoge.vpad.toplevel.gson
 import top.yudoge.vpad.toplevel.replace
 import top.yudoge.vpadapi.VPadServer
@@ -88,6 +89,7 @@ class PadViewModel @Inject constructor(
                 targetSetting.replace("velocity", sourceSetting["velocity"])
                 targetSetting.replace("mode", sourceSetting["mode"])
                 targetSetting.replace("specificModeSetting", sourceSetting["specificModeSetting"])
+                targetSetting.replace("triggerMode", sourceSetting["triggerMode"])
                 padSettings[i.first] = targetSetting
             }
             jo.replace("padSettings", padSettings)
@@ -107,7 +109,7 @@ class PadViewModel @Inject constructor(
     fun appendPad() = viewModelScope.launch {
         val jo = JsonParser.parseString(workingPresetDomain.workingPresetJson.value!!).asJsonObject
         val padSettings = jo["padSettings"].asJsonArray
-        padSettings.add(gson.toJsonTree(PadSetting(0, "NewPad", PadMode.Pad, 90, PadModeSetting())))
+        padSettings.add(gson.toJsonTree(PadSetting(0, "NewPad", PadMode.Pad, 90, TriggerMode.Trigger, PadModeSetting())))
         jo.replace("padSettings", padSettings)
         workingPresetDomain.updateWorkingPreset(gson.toJson(jo))
     }

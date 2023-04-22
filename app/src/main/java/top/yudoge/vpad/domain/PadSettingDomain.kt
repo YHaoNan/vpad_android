@@ -45,6 +45,7 @@ class PadSettingDomain @Inject constructor(
             VELOCITY ->  jo.replace("velocity", settingItem.inputValue().toInt())
             TITLE ->  jo.replace("title", settingItem.inputValue())
             OFFSET ->  jo.replace("offset", settingItem.inputValue().toInt())
+            TRIGGERMODE -> jo.replace("triggerMode", settingItem.selectedValue())
             MODE -> {
                 val padMode = PadMode.valueOf(settingItem.selectedValue())
                 jo.replace("mode", padMode)
@@ -88,6 +89,8 @@ class PadSettingDomain @Inject constructor(
                 add(it.offset.asInputItem(OFFSET, "Pad Offset", null, "Pad Offset"))
                 add(it.mode.asSelectItem(MODE, "Pad模式", "Pad触发后的事件模式"))
                 add(it.velocity.asInputItem(VELOCITY, "力度", "Pad按下后的音符力度", "1~127"))
+                add(it.triggerMode.asSelectItem(TRIGGERMODE, "触发模式", "Pad的触发模式"))
+
 
                 val subSetting = it.specificModeSetting
                 when (it.mode) {
@@ -138,6 +141,7 @@ class PadSettingDomain @Inject constructor(
         private const val CHORD_TRANSPOSE = 11
         private const val TITLE = 13
         private const val OFFSET = 14
+        private const val TRIGGERMODE = 15
         const val TAG = "PadSettingDomain"
 
     }

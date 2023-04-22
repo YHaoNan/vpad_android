@@ -6,6 +6,7 @@
     {
       "mode": "Chord",
       "offset": 0,
+      "triggerMode": "Trigger",
       "specificModeSetting": {
         "arpPct": 10,
         "level": "L_9",
@@ -19,6 +20,7 @@
     {
       "mode": "Chord",
       "offset": 5,
+      "triggerMode": "Trigger",
       "specificModeSetting": {
         "arpPct": 10,
         "level": "L_9",
@@ -32,6 +34,7 @@
     {
       "mode": "Chord",
       "offset": 7,
+      "triggerMode": "Trigger",
       "specificModeSetting": {
         "arpPct": 10,
         "level": "L_11",
@@ -45,6 +48,7 @@
     {
       "mode": "Chord",
       "offset": 4,
+      "triggerMode": "Trigger",
       "specificModeSetting": {
         "arpPct": 10,
         "level": "L_11",

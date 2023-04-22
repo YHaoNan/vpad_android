@@ -10,16 +10,20 @@ import top.yudoge.vpad.toplevel.PadEvent
  * 代表一个Pad布局初始化器
  */
 abstract class PadThemeInitializer() {
+
     abstract fun getView(parent: ViewGroup, viewType: Int): ViewDataBinding
     abstract fun bindView(
         databinding: ViewDataBinding,
         padSetting: PadSetting,
         padPosition: Int,
         settingMode: Boolean,
-        onPadEvent: (padSetting: PadSetting, padIndex: Int, event: PadEvent) -> Unit
+        eventEmitter: (String) -> Unit
     )
 
     abstract fun turnOnPadViewManually(padView: View);
     abstract fun turnOffPadViewManually(padView: View);
 
+    companion object {
+        val DELETE = "DELETE"
+    }
 }

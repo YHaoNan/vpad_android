@@ -12,6 +12,7 @@ import top.yudoge.vpad.R
 import top.yudoge.vpad.databinding.ItemPadAkaiMpd218Binding
 import top.yudoge.vpad.pojo.PadSetting
 import top.yudoge.vpad.toplevel.PadEvent
+import top.yudoge.vpad.toplevel.TriggerMode
 import top.yudoge.vpadapi.structure.MidiMessage
 
 @SuppressLint("LongLogTag")
@@ -30,33 +31,12 @@ class AKaiMPD218PadThemeInitializer : PadThemeInitializer() {
         padSetting: PadSetting,
         padPosition: Int,
         settingMode: Boolean,
-        onPadEvent: (padSetting: PadSetting, padIndex: Int, event: PadEvent) -> Unit
+        eventEmitter: (String) -> Unit
     ) {
         binding as ItemPadAkaiMpd218Binding
         binding.padTitle = padSetting.title
         binding.deleteVisiable = settingMode
-        binding.pad.setOnTouchListener { view, motionEvent ->
-            when(motionEvent.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    turnOnPadViewManually(binding.pad)
-                    if(!settingMode) onPadEvent(padSetting, padPosition, PadEvent.Down)
-                }
-                MotionEvent.ACTION_UP -> {
-                    turnOffPadViewManually(binding.pad)
-                    if (!settingMode) onPadEvent(padSetting, padPosition, PadEvent.Release)
-                    else onPadEvent(padSetting, padPosition, PadEvent.OpenSetting)
-                }
-                MotionEvent.ACTION_CANCEL -> {
-                    turnOffPadViewManually(binding.pad)
-                    if (!settingMode) onPadEvent(padSetting, padPosition, PadEvent.Release)
-                    else onPadEvent(padSetting, padPosition, PadEvent.OpenSetting)
-                }
-            }
-            true
-        }
-        binding.deleteBtn.setOnClickListener {
-            onPadEvent(padSetting, padPosition, PadEvent.Delete)
-        }
+        binding.deleteBtn.setOnClickListener {  eventEmitter(PadThemeInitializer.DELETE)}
     }
 
     override fun turnOnPadViewManually(padView: View) {
