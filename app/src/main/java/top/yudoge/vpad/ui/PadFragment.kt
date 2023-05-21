@@ -83,6 +83,9 @@ class PadFragment : Fragment() {
                     padViewModel.updatePresetParameter(it["ppl"]?.toInt()?:4, it["rgn"]?.toInt()?:16, it["bsn"]?.toInt()?:34)
                 }
             }
+            "Tog" -> {
+                padViewModel.toggleShowNoteName()
+            }
         }
     }
 
@@ -200,10 +203,16 @@ class PadFragment : Fragment() {
             }
         });
 
+        padViewModel.showNoteName.observe(viewLifecycleOwner) {showNoteName ->
+            binding.padContainer.adapter?.let {
+                it as PadContainerAdapter
+                it.setShowNoteName(showNoteName)
+            }
+        }
         padViewModel.workingPreset.observe(viewLifecycleOwner) { preset ->
             val girdLayoutManager = GridLayoutManager(activity, preset.padsPerLine);
             binding.padContainer.layoutManager = girdLayoutManager
-            binding.padContainer.adapter = PadContainerAdapter(padThemeInitializer, preset.padSettings, padViewModel.settingMode.value!!) { padSetting, padPosition, event ->
+            binding.padContainer.adapter = PadContainerAdapter(padThemeInitializer, preset.padSettings, padViewModel.settingMode.value!!, preset.baseNote, padViewModel.showNoteName.value!!) { padSetting, padPosition, event ->
                 // 只有当没有进行padSetting复制时才跳转到设置页面
                 if (event == PadEvent.OpenSetting && padViewModel.copyToPadIndexies.size == 0) {
                     // to setting fragment

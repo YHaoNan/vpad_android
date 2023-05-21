@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import top.yudoge.vpad.pojo.PadSetting
+import top.yudoge.vpad.toplevel.MidiNoteName
 import top.yudoge.vpad.toplevel.PadEvent
 
 /**
@@ -16,7 +17,9 @@ abstract class PadThemeInitializer() {
         databinding: ViewDataBinding,
         padSetting: PadSetting,
         padPosition: Int,
+        padNote: Int,
         settingMode: Boolean,
+        showNoteName: Boolean,
         eventEmitter: (String) -> Unit
     )
 

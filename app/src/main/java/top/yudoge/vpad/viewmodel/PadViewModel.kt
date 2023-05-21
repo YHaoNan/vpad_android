@@ -41,6 +41,7 @@ class PadViewModel @Inject constructor(
 
     // 关于设置项
     val bpm: LiveData<Int> = settingRepository.bpm.asLiveData()
+    val showNoteName: LiveData<Int> = settingRepository.showNoteName.asLiveData()
     val workingPreset: LiveData<Preset> = workingPresetDomain.workingPreset;
     private var _settingMode: MutableLiveData<Boolean> = MutableLiveData(false);
     val settingMode: LiveData<Boolean> by ::_settingMode
@@ -65,6 +66,16 @@ class PadViewModel @Inject constructor(
     fun setBpm(bpm: Int) = viewModelScope.launch {
         settingRepository.updateBpm(bpm)
         _screenMessage.value = "bpm -> ${bpm}"
+    }
+    fun toggleShowNoteName() = viewModelScope.launch {
+        val curr = showNoteName.value!!
+        if (curr == 0) {
+            settingRepository.updateShowNoteName(1)
+            _screenMessage.value = "show pad name"
+        } else {
+            _screenMessage.value = "show note name"
+            settingRepository.updateShowNoteName(0)
+        }
     }
 
     fun updatePresetParameter(newPadsPerLine: Int, newRegionSpan: Int, newBaseNote: Int) = viewModelScope.launch {

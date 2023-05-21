@@ -14,6 +14,8 @@ class PadContainerAdapter(
     private val padThemeInitializer: PadThemeInitializer,
     private val padSettings: List<PadSetting>,
     private var settingMode: Boolean,
+    private var baseNote: Int,
+    private var showNoteName: Int,
     private val onPadEvent: (padSetting: PadSetting, padIndex: Int, event: PadEvent) -> Unit
 ) : RecyclerView.Adapter<PadContainerAdapter.ViewHolder?>() {
     private var padControllers: MutableList<PadTouchController?> = mutableListOf(*arrayOfNulls(padSettings.size))
@@ -22,10 +24,11 @@ class PadContainerAdapter(
         ViewHolder(padThemeInitializer.getView(parent, viewType))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val setting = padSettings[position]
         // 调用PadThemeInitializer bindView
-        padThemeInitializer.bindView(holder.dataBinding, padSettings[position], position, settingMode) {event ->
+        padThemeInitializer.bindView(holder.dataBinding, setting, position, baseNote + setting.offset, settingMode, showNoteName == 1) {event ->
             when (event) {
-                PadThemeInitializer.DELETE -> onPadEvent(padSettings[position], position, PadEvent.Delete)
+                PadThemeInitializer.DELETE -> onPadEvent(setting, position, PadEvent.Delete)
             }
         }
         // 设置PadController
@@ -64,6 +67,12 @@ class PadContainerAdapter(
     fun disableSettingMode() {
         settingMode = false
         notifyDataSetChanged()
+    }
+
+    fun setShowNoteName(showNoteName: Int) {
+        if (showNoteName == this.showNoteName) return
+        this.showNoteName = showNoteName
+        this.notifyDataSetChanged()
     }
 
     class ViewHolder(val dataBinding: ViewDataBinding) : RecyclerView.ViewHolder(dataBinding.root) {

@@ -4,10 +4,12 @@ import top.yudoge.vpad.pojo.Fader
 import top.yudoge.vpad.pojo.FaderMode
 
 object Constants {
+    val DEFAULT_SHOW_NOTE_NAME: Int = 0
     const val DB_NAME = "vpad.db"
     const val DEFAULT_PRESET_FILE_NAME = "builtin_presets/3 x 3 Pad.preset.json"
     val BUILTIN_PRESET_FILE_NAMES = listOf<String>(
         "builtin_presets/4 x 4 Pad.preset.json",
+        "builtin_presets/6 x 6 Pad.preset.json",
         "builtin_presets/3 x 3 Pad.preset.json",
         "builtin_presets/2-5-1 Chord.preset.json",
         "builtin_presets/Lofi Chord.preset.json"

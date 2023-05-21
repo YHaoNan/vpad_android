@@ -11,6 +11,7 @@ import androidx.databinding.ViewDataBinding
 import top.yudoge.vpad.R
 import top.yudoge.vpad.databinding.ItemPadAkaiMpd218Binding
 import top.yudoge.vpad.pojo.PadSetting
+import top.yudoge.vpad.toplevel.MidiNoteName
 import top.yudoge.vpad.toplevel.PadEvent
 import top.yudoge.vpad.toplevel.TriggerMode
 import top.yudoge.vpadapi.structure.MidiMessage
@@ -26,15 +27,25 @@ class AKaiMPD218PadThemeInitializer : PadThemeInitializer() {
         )
     }
 
+    private fun getNameByMidiNoteName(mnn: MidiNoteName?): String {
+        if (mnn == null) return "N/A";
+        if (mnn.nameInFlat.equals(mnn.nameInSharp)) {
+            return mnn.nameInSharp;
+        } else {
+            return mnn.nameInSharp + "/" + mnn.nameInFlat;
+        }
+    }
     override fun bindView(
         binding: ViewDataBinding,
         padSetting: PadSetting,
         padPosition: Int,
+        padNote: Int,
         settingMode: Boolean,
+        showNoteName: Boolean,
         eventEmitter: (String) -> Unit
     ) {
         binding as ItemPadAkaiMpd218Binding
-        binding.padTitle = padSetting.title
+        binding.padTitle = if (showNoteName) getNameByMidiNoteName(MidiNoteName.byNote(padNote)) else padSetting.title
         binding.deleteVisiable = settingMode
         binding.deleteBtn.setOnClickListener {  eventEmitter(PadThemeInitializer.DELETE)}
     }

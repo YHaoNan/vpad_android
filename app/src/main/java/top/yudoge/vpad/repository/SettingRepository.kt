@@ -45,6 +45,11 @@ class SettingRepository @Inject constructor(
             it[BPM_KEY] ?: Constants.DEFAULT_BPM
         }
 
+    val showNoteName: Flow<Int> = context.dataStore.data
+        .map {
+            it[SHOW_NOTENAME_KEY] ?: Constants.DEFAULT_SHOW_NOTE_NAME
+        }
+
     /**
      * preset must be a vaild json string
      */
@@ -71,6 +76,11 @@ class SettingRepository @Inject constructor(
             it[BPM_KEY] = bpm
         }
     }
+    suspend fun updateShowNoteName(showNoteName: Int) {
+        context.dataStore.edit {
+            it[SHOW_NOTENAME_KEY] = showNoteName
+        }
+    }
 
     companion object {
         // remove this
@@ -78,6 +88,7 @@ class SettingRepository @Inject constructor(
 
         private val WORKING_PRESET_KEY = stringPreferencesKey("working_preset")
         private val BPM_KEY = intPreferencesKey("bpm")
+        private val SHOW_NOTENAME_KEY = intPreferencesKey("show_note_name")
         const val TAG = "SettingRepository"
     }
 }

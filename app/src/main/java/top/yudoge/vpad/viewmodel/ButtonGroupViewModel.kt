@@ -21,6 +21,7 @@ class ButtonGroupViewModel {
         ButtonLabel("Pst"),
         ButtonLabel("Exp"),
         ButtonLabel("Set"),
+        ButtonLabel("Tog"),
     )
 
 }
