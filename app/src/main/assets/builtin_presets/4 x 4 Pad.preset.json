@@ -5,6 +5,7 @@
   "baseNote": 36,
   "regionSpan": 16,
   "padsPerLine": 4,
+  "channel": 1,
   "padSettings": [
     {
       "offset": 12,

@@ -15,7 +15,8 @@ class ArpMessage(
     var upNoteCnt: Int,
     var velocityAutomation: Int,
     var dynamicPct: Int,
-    var bpm:Int
+    var bpm:Int,
+    var channel: Int
 ) : Message() {
 
     init {
@@ -23,7 +24,7 @@ class ArpMessage(
     }
 
     override fun bodyToBytes(): ByteArray {
-        return Utils.concatBytes(
+        return Utils.concatBytes(Utils.concatBytes(
             byteArrayOf(
                 note.toByte(), velocity.toByte(), state.toByte(),
                 method.toByte(), rate.toByte(), swingPct.toByte(),
@@ -31,7 +32,7 @@ class ArpMessage(
             ), Utils.concatBytes(
                 fromInt2ToByte(dynamicPct.toShort()), fromInt2ToByte(bpm.toShort())
             )
-        )
+        ), byteArrayOf(channel.toByte()))
     }
 
     override fun bodyFromBytes(bytes: ByteArray, offset: Int): Int {
@@ -45,12 +46,12 @@ class ArpMessage(
         this.velocityAutomation = bytes[offset + 7].toInt()
         this.dynamicPct = fromByteToInt2(bytes, 8).toInt()
         this.bpm = fromByteToInt2(bytes, 10).toInt()
-        return 12
+        this.channel = bytes[offset + 12].toInt()
+        return 13
     }
 
     override fun toString(): String {
-        return "ArpMessage(note=$note, velocity=$velocity, state=$state, method=$method, rate=$rate, swingPct=$swingPct, upNoteCnt=$upNoteCnt, velocityAutomation=$velocityAutomation, dynamicPct=$dynamicPct, bpm=$bpm)"
+        return "ArpMessage(note=$note, velocity=$velocity, state=$state, method=$method, rate=$rate, swingPct=$swingPct, upNoteCnt=$upNoteCnt, velocityAutomation=$velocityAutomation, dynamicPct=$dynamicPct, bpm=$bpm, channel=$channel)"
     }
-
 
 }

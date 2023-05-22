@@ -27,5 +27,5 @@ data class PresetRecord(
     /**
      * 从presetRecord生成一个Preset，所有需要读preset文件的字段都会被设置成0值
      */
-    fun toPresetWithoutReadPresetFileFile() = Preset(presetName, author, description, 0, 0, 0, listOf())
+    fun toPresetWithoutReadPresetFileFile() = Preset(presetName, author, description, 0, 0, 0, 1, listOf())
 }

@@ -13,15 +13,17 @@ class ChordMessage(
     var chordType: Int,
     var chordLevel: Int,
     var transpose: Int,
-    var arpDelay: Int
+    var arpDelay: Int,
+    var channel: Int
 ) : Message() {
     init {
         this.op = Operations.OP_CHORDMESSAGE
     }
     override fun bodyToBytes(): ByteArray {
-        return Utils.concatBytes(
+        return Utils.concatBytes(Utils.concatBytes(
             byteArrayOf(note.toByte(), velocity.toByte(), state.toByte(), chordType.toByte(), chordLevel.toByte(), transpose.toByte(), arpDelay.toByte()),
-            fromInt2ToByte(bpm.toShort()))
+            fromInt2ToByte(bpm.toShort())), byteArrayOf(channel.toByte())
+        )
     }
 
     override fun bodyFromBytes(bytes: ByteArray, offset: Int): Int {
@@ -33,11 +35,12 @@ class ChordMessage(
         this.transpose = bytes[offset + 5].toInt()
         this.arpDelay = bytes[offset + 6].toInt()
         this.bpm = fromByteToInt2(bytes, 7).toInt()
-        return 9
+        this.channel = bytes[offset + 9].toInt()
+        return 10
     }
 
     override fun toString(): String {
-        return "ChordMessage(note=$note, velocity=$velocity, state=$state, chordType=$chordType, transpose=$transpose, arpDelay=$arpDelay)"
+        return "ChordMessage(note=$note, velocity=$velocity, state=$state, chordType=$chordType, transpose=$transpose, arpDelay=$arpDelay, channel=$channel)"
     }
 
 }

@@ -13,17 +13,19 @@ public class MidiMessage extends Message {
     private int velocity;
     // 1字节
     private int state;
+    private int channel;
 
-    public MidiMessage(int note, int velocity, int state) {
+    public MidiMessage(int note, int velocity, int state, int channel) {
         this.op = Operations.OP_MIDIMESSAGE;
         this.note = note;
         this.velocity = velocity;
         this.state = state;
+        this.channel = channel;
     }
 
     @Override
     byte[] bodyToBytes() {
-        return new byte[] {(byte) this.note, (byte) this.velocity, (byte) this.state};
+        return new byte[] {(byte) this.note, (byte) this.velocity, (byte) this.state, (byte) this.channel};
     }
 
     @Override
@@ -31,7 +33,8 @@ public class MidiMessage extends Message {
         this.note = bytes[offset];
         this.velocity = bytes[offset + 1];
         this.state = bytes[offset + 2];
-        return 3;
+        this.channel = bytes[offset + 3];
+        return 4;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class MidiMessage extends Message {
                 "note=" + note +
                 ", velocity=" + velocity +
                 ", state=" + state +
+                ", channel=" + channel +
                 '}';
     }
 }

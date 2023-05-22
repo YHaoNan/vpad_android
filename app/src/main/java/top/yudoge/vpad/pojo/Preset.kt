@@ -33,10 +33,11 @@ data class Preset(
     val baseNote: Int,
     val regionSpan: Int,
     val padsPerLine: Int,
+    val channel: Int,
     val padSettings: List<PadSetting>
 ) {
     fun newPresetFromThis(presetName: String, author: String, description: String): Preset {
-        return Preset(presetName, author, description, this.baseNote, this.regionSpan, this.padsPerLine, this.padSettings)
+        return Preset(presetName, author, description, this.baseNote, this.regionSpan, this.padsPerLine, this.channel, this.padSettings)
     }
 
     fun toPresetRecord(targetFile: String) = PresetRecord(0, presetName, author, description, targetFile, Date().time)

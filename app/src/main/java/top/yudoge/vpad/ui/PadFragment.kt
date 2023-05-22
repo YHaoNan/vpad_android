@@ -78,9 +78,10 @@ class PadFragment : Fragment() {
                     listOf(
                         InputEntry("ppl", padViewModel.workingPreset.value!!.padsPerLine.toString(), "一行Pad数", KeyboardType.Number),
                         InputEntry("rgn", padViewModel.workingPreset.value!!.regionSpan.toString(), "音域跨度", KeyboardType.Number),
-                        InputEntry("bsn", padViewModel.workingPreset.value!!.baseNote.toString(), "开始音符", KeyboardType.Number)
+                        InputEntry("bsn", padViewModel.workingPreset.value!!.baseNote.toString(), "开始音符", KeyboardType.Number),
+                        InputEntry("chan", padViewModel.workingPreset.value!!.channel.toString(), "默认通道", KeyboardType.Number)
                     )) {
-                    padViewModel.updatePresetParameter(it["ppl"]?.toInt()?:4, it["rgn"]?.toInt()?:16, it["bsn"]?.toInt()?:34)
+                    padViewModel.updatePresetParameter(it["ppl"]?.toInt()?:4, it["rgn"]?.toInt()?:16, it["bsn"]?.toInt()?:34, it["chan"]?.toInt()?:1)
                 }
             }
             "Tog" -> {
@@ -222,12 +223,12 @@ class PadFragment : Fragment() {
                 } else if (event == PadEvent.Down){
                     // send midi message
                     activityViewModel.sendMessageToServer(
-                        padViewModel.getMessageByPadState(1, padSetting, buttonGroupAdapter.getBpm(), preset.baseNote)
+                        padViewModel.getMessageByPadState(1, padSetting, buttonGroupAdapter.getBpm(), preset.baseNote, preset.channel)
                     )
                 } else if (event == PadEvent.Release){
                     // send midi message
                     activityViewModel.sendMessageToServer(
-                        padViewModel.getMessageByPadState(0, padSetting, buttonGroupAdapter.getBpm(), preset.baseNote)
+                        padViewModel.getMessageByPadState(0, padSetting, buttonGroupAdapter.getBpm(), preset.baseNote, preset.channel)
                     )
                 } else if (event == PadEvent.Delete) {
                     padViewModel.deletePadAt(padPosition)

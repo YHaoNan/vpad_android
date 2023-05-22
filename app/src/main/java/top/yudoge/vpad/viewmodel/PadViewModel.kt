@@ -78,8 +78,8 @@ class PadViewModel @Inject constructor(
         }
     }
 
-    fun updatePresetParameter(newPadsPerLine: Int, newRegionSpan: Int, newBaseNote: Int) = viewModelScope.launch {
-        workingPresetDomain.updatePresetParameter(newPadsPerLine, newRegionSpan, newBaseNote)
+    fun updatePresetParameter(newPadsPerLine: Int, newRegionSpan: Int, newBaseNote: Int, channel: Int) = viewModelScope.launch {
+        workingPresetDomain.updatePresetParameter(newPadsPerLine, newRegionSpan, newBaseNote, channel)
     }
 
     fun setPadsPerLine(newPadsPerLine: Int) = viewModelScope.launch {
@@ -125,7 +125,7 @@ class PadViewModel @Inject constructor(
         workingPresetDomain.updateWorkingPreset(gson.toJson(jo))
     }
 
-    fun getMessageByPadState(state: Int, padSetting: PadSetting, bpm: Int, baseNote: Int) : Message {
+    fun getMessageByPadState(state: Int, padSetting: PadSetting, bpm: Int, baseNote: Int, channel: Int) : Message {
 
         _screenMessage.value = "Pad ${padSetting.title} ${if(state == MidiMessage.STATE_ON) "ON" else "OFF"}, note ${baseNote + padSetting.offset} "
 
@@ -133,18 +133,18 @@ class PadViewModel @Inject constructor(
         val note = baseNote + padSetting.offset
         val subSetting = padSetting.specificModeSetting
         when (padSetting.mode) {
-            PadMode.Pad -> return MidiMessage(note, padSetting.velocity, state)
+            PadMode.Pad -> return MidiMessage(note, padSetting.velocity, state, channel)
             PadMode.Repeat -> {
                 subSetting as RepeatModeSetting
-                return ArpMessage(note, padSetting.velocity, state, ArpMethod.NO_METHOD.ordinal, subSetting.rate.ordinal, subSetting.swingPct, 1, subSetting.velocityAutomation.ordinal, subSetting.dynamicPct, bpm)
+                return ArpMessage(note, padSetting.velocity, state, ArpMethod.NO_METHOD.ordinal, subSetting.rate.ordinal, subSetting.swingPct, 1, subSetting.velocityAutomation.ordinal, subSetting.dynamicPct, bpm, channel)
             }
             PadMode.Arp -> {
                 subSetting as ArpModeSetting
-                return ArpMessage(note, padSetting.velocity, state, subSetting.method.ordinal, subSetting.rate.ordinal, subSetting.swingPct, subSetting.upNoteCnt, subSetting.velocityAutomation.ordinal, subSetting.dynamicPct, bpm)
+                return ArpMessage(note, padSetting.velocity, state, subSetting.method.ordinal, subSetting.rate.ordinal, subSetting.swingPct, subSetting.upNoteCnt, subSetting.velocityAutomation.ordinal, subSetting.dynamicPct, bpm, channel)
             }
             PadMode.Chord -> {
                 subSetting as ChordModeSetting
-                return ChordMessage(note, padSetting.velocity, state, bpm, subSetting.type.ordinal, subSetting.level.ordinal, subSetting.transpose, subSetting.arpPct)
+                return ChordMessage(note, padSetting.velocity, state, bpm, subSetting.type.ordinal, subSetting.level.ordinal, subSetting.transpose, subSetting.arpPct, channel)
             }
         }
     }
