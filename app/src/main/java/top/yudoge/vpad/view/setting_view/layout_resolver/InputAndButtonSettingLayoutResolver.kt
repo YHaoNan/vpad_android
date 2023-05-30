@@ -3,6 +3,7 @@ package top.yudoge.vpad.view.setting_view.layout_resolver
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import top.yudoge.vpad.R
 import top.yudoge.vpad.view.setting_view.InputAndButtonSettingItem
 import top.yudoge.vpad.view.setting_view.SettingItem
@@ -23,14 +24,24 @@ class InputAndButtonSettingLayoutResolver : InputSettingLayoutResolver() {
         settingBody.findViewById<TextView>(R.id.setting_neg_step_1).apply {
             setOnClickListener {
                 val value = settingItem.value.toInt()
-                settingItem.value = (value - settingItem.step1).toString()
+                val newValue = value - settingItem.step1;
+                if (!settingItem.validFunc(newValue)) {
+                    Toast.makeText(context, settingItem.errorMessage, Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                settingItem.value = newValue.toString()
                 onSettingItemChangedListener?.onChanged(settingItem)
             }
         }
         settingBody.findViewById<TextView>(R.id.setting_posi_step_1).apply {
             setOnClickListener {
                 val value = settingItem.value.toInt()
-                settingItem.value = (value + settingItem.step1).toString()
+                val newValue = value + settingItem.step1;
+                if (!settingItem.validFunc(newValue)) {
+                    Toast.makeText(context, settingItem.errorMessage, Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                settingItem.value = newValue.toString()
                 onSettingItemChangedListener?.onChanged(settingItem)
             }
         }
@@ -42,7 +53,12 @@ class InputAndButtonSettingLayoutResolver : InputSettingLayoutResolver() {
             }
             setOnClickListener {
                 val value = settingItem.value.toInt()
-                settingItem.value = (value - settingItem.step2).toString()
+                val newValue = value - settingItem.step2;
+                if (!settingItem.validFunc(newValue)) {
+                    Toast.makeText(context, settingItem.errorMessage, Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                settingItem.value = newValue.toString();
                 onSettingItemChangedListener?.onChanged(settingItem)
             }
         }
@@ -53,7 +69,12 @@ class InputAndButtonSettingLayoutResolver : InputSettingLayoutResolver() {
             }
             setOnClickListener {
                 val value = settingItem.value.toInt()
-                settingItem.value = (value + settingItem.step2).toString()
+                val newValue = value + settingItem.step2;
+                if (!settingItem.validFunc(newValue)) {
+                    Toast.makeText(context, settingItem.errorMessage, Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                settingItem.value = newValue.toString();
                 onSettingItemChangedListener?.onChanged(settingItem)
             }
         }

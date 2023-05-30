@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import top.yudoge.vpad.R
 import top.yudoge.vpad.view.setting_view.InputSettingItem
 import top.yudoge.vpad.view.setting_view.SettingItem
@@ -42,6 +43,10 @@ open class InputSettingLayoutResolver : SettingLayoutResolver {
                 .setTitle(settingItem.title)
                 .setPositiveButton(R.string.sure, DialogInterface.OnClickListener { dialogInterface, i ->
                     if (settingItem.value == edit.text.toString()) return@OnClickListener
+                    if (!settingItem.validFn(edit.text.toString())) {
+                        Toast.makeText(context, settingItem.errorMessage, Toast.LENGTH_SHORT).show()
+                        return@OnClickListener
+                    }
                     settingItem.value = edit.text.toString()
                     preview.text = settingItem.value
                     onSettingItemChangedListener?.onChanged(settingItem)

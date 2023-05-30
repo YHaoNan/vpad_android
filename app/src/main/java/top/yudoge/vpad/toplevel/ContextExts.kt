@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -33,12 +34,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import java.lang.reflect.Modifier
+import java.util.regex.Pattern
 
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -66,13 +71,15 @@ inline fun Context.showInputDialog(title: String, value: String?, hint: String?,
 
 }
 
-data class InputEntry (val key: String, val value: String, val label: String, val keyboardType: KeyboardType)
+data class InputEntry (val key: String, val value: String, val label: String, val keyboardType: KeyboardType, val errorMessage: String, val validFn: (value: String) -> Boolean)
 
 inline fun ViewGroup.attachMultipleInputDialog(title: String, inputs: List<InputEntry>, crossinline inputCallback: (values: Map<String, String>) -> Unit) {
     val container = ComposeView(context)
     val map = mutableMapOf<String, String>()
+    val validMap = mutableMapOf<String, Boolean>()
     inputs.forEach {
         map.put(it.key, it.value)
+        validMap.put(it.key, it.validFn(it.value))
     }
     container.setContent {
         AlertDialog(
@@ -82,22 +89,42 @@ inline fun ViewGroup.attachMultipleInputDialog(title: String, inputs: List<Input
                 Column {
                     inputs.forEach { entry ->
                         var text by remember { mutableStateOf(TextFieldValue(entry.value)) }
+                        var isError by remember { mutableStateOf(!validMap.get(entry.key)!!) }
                         TextField(
                             value = text,
+                            isError = isError,
                             label = { Text(text = entry.label) },
                             keyboardOptions = KeyboardOptions(keyboardType = entry.keyboardType),
                             onValueChange = {
                                 text = it
                                 map.put(entry.key, it.text)
+                                val vaild = entry.validFn(it.text)
+                                validMap.put(entry.key, vaild)
+                                isError = !vaild
                             },
                             enabled = true,
                             readOnly = false
                         )
+                        if (isError)
+                            Text(
+                                text = entry.errorMessage,
+                                color = MaterialTheme.colors.error,
+                                style = TextStyle(fontSize = 10.sp)
+                            )
                     }
                 }
             },
             confirmButton = {
-                TextButton(onClick = {inputCallback.invoke(map); removeView(container)}) { Text(text = "OK") }
+                TextButton(onClick = {
+                    // 如果有未通过验证的字段
+                    if (validMap.values.find { !it } != null) {
+                        Toast.makeText(context, "有不正确的项", Toast.LENGTH_SHORT).show()
+                    } else {
+                        inputCallback.invoke(map); removeView(container)
+                    }
+                }) {
+                    Text(text = "OK")
+                }
             },
             dismissButton = {
                 TextButton(onClick = {removeView(container)}) { Text(text = "Cancel") }

@@ -28,6 +28,7 @@
       "title": "Pad14",
       "mode": "Pad",
       "velocity": 90,
+      "triggerMode": "Trigger",
       "specificModeSetting": {"mode": "Pad"}
     },
     {

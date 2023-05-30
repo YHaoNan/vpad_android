@@ -86,9 +86,9 @@ class PadSettingDomain @Inject constructor(
             mutableListOf<SettingItem>().apply {
                 add("Pad ${padIdStartByZero + 1} 设置".asDivider())
                 add(it.title.asInputItem(TITLE, "Pad标题", null, "Pad标题"))
-                add(it.offset.asInputItem(OFFSET, "Pad Offset", null, "Pad Offset"))
+                add(it.offset.asInputItem(OFFSET, "Pad Offset", null, "Pad Offset", "请输入0~127之间的数") {it>=0 && it<=127})
                 add(it.mode.asSelectItem(MODE, "Pad模式", "Pad触发后的事件模式"))
-                add(it.velocity.asInputItem(VELOCITY, "力度", "Pad按下后的音符力度", "1~127"))
+                add(it.velocity.asInputItem(VELOCITY, "力度", "Pad按下后的音符力度", "0~127", "请输入0~127之间的数") {it>=0 && it<=127})
                 add(it.triggerMode.asSelectItem(TRIGGERMODE, "触发模式", "Pad的触发模式"))
 
 
@@ -99,26 +99,26 @@ class PadSettingDomain @Inject constructor(
                         add("Arp设置".asDivider())
                         add(subSetting.method.asSelectItem(ARP_METHOD, "琶音方式", "按照何种方式琶音"))
                         add(subSetting.rate.asSelectItem(ARP_RATE, "琶音频率", "按照何种频率进行琶音"))
-                        add(subSetting.swingPct.asInputAndButtonItem(ARP_SWING_PCT, "swing", "琶音的摇摆程度", "0~100"))
-                        add(subSetting.upNoteCnt.asInputAndButtonItem(ARP_UP_NOTE_CNT, "不同音符数", "按照琶音方式产生的不同音符个数", "1~8", step2Show = false))
+                        add(subSetting.swingPct.asInputAndButtonItem(ARP_SWING_PCT, "swing", "琶音的摇摆程度", "0~100", errorMessage = "请输入0~100之间的数") {it>=0 && it<=100})
+                        add(subSetting.upNoteCnt.asInputAndButtonItem(ARP_UP_NOTE_CNT, "不同音符数", "按照琶音方式产生的不同音符个数", "1~8", step2Show = false, errorMessage = "请输入1~8之间的数") {it>=1 && it <=8})
                         add(subSetting.velocityAutomation.asSelectItem(ARP_VELOCITY_AUTOMATION, "力度包络", "琶音音符的力度自动化"))
-                        add(subSetting.dynamicPct.asInputAndButtonItem(ARP_DYNAMIC_PCT, "动态范围", "力度包络遵循的动态范围", "0~200"))
+                        add(subSetting.dynamicPct.asInputAndButtonItem(ARP_DYNAMIC_PCT, "动态范围", "力度包络遵循的动态范围", "0~200", errorMessage = "请输入0~200之间的数") {it>=0 && it<=200})
                     }
                     PadMode.Repeat -> {
                         subSetting as RepeatModeSetting
                         add("Repeat设置".asDivider())
                         add(subSetting.rate.asSelectItem(ARP_RATE, "频率", "按照何种频率进行重复"))
-                        add(subSetting.swingPct.asInputAndButtonItem(ARP_SWING_PCT, "swing", "重复的摇摆程度", "0~100"))
+                        add(subSetting.swingPct.asInputAndButtonItem(ARP_SWING_PCT, "swing", "琶音的摇摆程度", "0~100", errorMessage = "请输入0~100之间的数") {it>=0 && it<=100})
                         add(subSetting.velocityAutomation.asSelectItem(ARP_VELOCITY_AUTOMATION, "力度包络", "重复音符的力度自动化"))
-                        add(subSetting.dynamicPct.asInputAndButtonItem(ARP_DYNAMIC_PCT, "动态范围", "力度包络遵循的动态范围", "0~200"))
+                        add(subSetting.dynamicPct.asInputAndButtonItem(ARP_DYNAMIC_PCT, "动态范围", "力度包络遵循的动态范围", "0~200", errorMessage = "请输入0~200之间的数") {it>=0 && it<=200})
                     }
                     PadMode.Chord -> {
                         subSetting as ChordModeSetting
                         add("Chord设置".asDivider())
                         add(subSetting.type.asSelectItem(CHORD_TYPE, "和弦类别", null))
                         add(subSetting.level.asSelectItem(CHORD_LEVEL, "和弦级数", null))
-                        add(subSetting.arpPct.asInputAndButtonItem(CHORD_ARP_PCT, "琶音程度", "控制和弦中不同音的起始延迟", "0~100"))
-                        add(subSetting.transpose.asInputAndButtonItem(CHORD_TRANSPOSE, "和弦转置", "控制和弦的转置", ""))
+                        add(subSetting.arpPct.asInputAndButtonItem(CHORD_ARP_PCT, "琶音程度", "控制和弦中不同音的起始延迟", "0~100", errorMessage = "请输入0~100之间的数") {it>=0 && it<=100})
+                        add(subSetting.transpose.asInputAndButtonItem(CHORD_TRANSPOSE, "和弦转置", "控制和弦的转置", "", step2Show = false, "请输入0~10之间的数") {it>=0 && it<=10})
                     }
                     PadMode.Pad -> {}
                 }
@@ -149,12 +149,16 @@ class PadSettingDomain @Inject constructor(
     private inline fun String.asDivider(id: Int = NO_ID) = SettingDivider(id, this)
     private inline fun <reified T : Enum<T>> T.asSelectItem(id: Int = NO_ID, title: String, subTitle: String?)  =
         SelectSettingItem(id, title, subTitle, ordinal, enumValues<T>().names())
-    private inline fun Int.asInputItem(id: Int = NO_ID, title: String, subTitle: String?, hint: String) =
-        InputSettingItem(id, title, subTitle, this.toString(), hint, InputType.TYPE_CLASS_NUMBER)
-    private inline fun String.asInputItem(id: Int = NO_ID, title: String, subTitle: String?, hint: String) =
-        InputSettingItem(id, title, subTitle, this, hint, InputType.TYPE_CLASS_TEXT)
-    private inline fun Int.asInputAndButtonItem(id: Int = NO_ID, title: String, subTitle: String?, hint: String, step2Show: Boolean = true) =
-        InputAndButtonSettingItem(id, title, subTitle, this.toString(), hint, InputType.TYPE_CLASS_NUMBER, step2Show = step2Show)
+    private inline fun Int.asInputItem(id: Int = NO_ID, title: String, subTitle: String?, hint: String, errorMessage: String = "", crossinline validFn: (Int) -> Boolean = {true}) =
+        InputSettingItem(id, title, subTitle, this.toString(), hint, InputType.TYPE_CLASS_NUMBER, errorMessage) {
+            val num = it.toIntOrNull();
+            if (num == null) false
+            else validFn(num)
+        }
+    private inline fun String.asInputItem(id: Int = NO_ID, title: String, subTitle: String?, hint: String, errorMessage: String = "", noinline validFn: (String) -> Boolean = {true}) =
+        InputSettingItem(id, title, subTitle, this, hint, InputType.TYPE_CLASS_TEXT, errorMessage, validFn)
+    private inline fun Int.asInputAndButtonItem(id: Int = NO_ID, title: String, subTitle: String?, hint: String, step2Show: Boolean = true, errorMessage: String = "", noinline validFn: (Int) -> Boolean = {true}) =
+        InputAndButtonSettingItem(id, title, subTitle, this.toString(), hint, InputType.TYPE_CLASS_NUMBER, step2Show = step2Show, errorMsg = errorMessage, validFunc = validFn)
     private inline fun SettingItem.inputValue(): String {
         return (this as InputSettingItem).value
     }

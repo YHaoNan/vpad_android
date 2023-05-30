@@ -8,5 +8,7 @@ open class InputSettingItem(
     subTitle: String?,
     var value: String,
     val hint: String = "",
-    val inputType: Int
+    val inputType: Int,
+    val errorMessage: String,
+    val validFn: (String) -> Boolean
 ) : SettingItem(id, title, subTitle)

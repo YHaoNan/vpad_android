@@ -55,7 +55,10 @@ class PadFragment : Fragment() {
             "Rgn-" -> padViewModel.decreaseNoteRegion()
             "PDST" -> padViewModel.toggleSettingMode()
             "BPM" -> context?.showInputDialog("设置BPM", value = buttonGroupAdapter.getBpm().toString(), null) {
-                padViewModel.setBpm(it.toInt())
+                val newbpm = it.toIntOrNull()
+                if (newbpm == null) Toast.makeText(requireContext(), "请输入数字", Toast.LENGTH_SHORT).show();
+                else if (newbpm < 1 || newbpm > 1000) Toast.makeText(requireContext(), "请输入[1,1000]", Toast.LENGTH_SHORT).show();
+                else padViewModel.setBpm(it.toInt())
             }
             "PLAY", "STOP", "REC", "LOOP", "UNDO", "REDO", "CLK", "SAVE" -> {
                 padViewModel.getControlMessageByLabel(it.label)?.let {
@@ -76,10 +79,10 @@ class PadFragment : Fragment() {
             "Set" -> {
                 rootView(binding).attachMultipleInputDialog("Preset参数设置",
                     listOf(
-                        InputEntry("ppl", padViewModel.workingPreset.value!!.padsPerLine.toString(), "一行Pad数", KeyboardType.Number),
-                        InputEntry("rgn", padViewModel.workingPreset.value!!.regionSpan.toString(), "音域跨度", KeyboardType.Number),
-                        InputEntry("bsn", padViewModel.workingPreset.value!!.baseNote.toString(), "开始音符", KeyboardType.Number),
-                        InputEntry("chan", padViewModel.workingPreset.value!!.channel.toString(), "默认通道", KeyboardType.Number)
+                        InputEntry("ppl", padViewModel.workingPreset.value!!.padsPerLine.toString(), "一行Pad数", KeyboardType.Number,"请输入1~10中的数字") {val num = it.toIntOrNull(); if (num==null)false else num >=1 && num <= 10},
+                        InputEntry("rgn", padViewModel.workingPreset.value!!.regionSpan.toString(), "音域跨度", KeyboardType.Number, "请输入1~127中的数字") {val num = it.toIntOrNull(); if (num==null)false else num >=1 && num <= 127},
+                        InputEntry("bsn", padViewModel.workingPreset.value!!.baseNote.toString(), "开始音符", KeyboardType.Number, "请输入0~127中的数字") {val num = it.toIntOrNull(); if (num==null)false else num >=0 && num <= 127},
+                        InputEntry("chan", padViewModel.workingPreset.value!!.channel.toString(), "通道", KeyboardType.Number, "请输入0~127中的数字") {val num = it.toIntOrNull(); if (num==null)false else num >=0 && num <= 127}
                     )) {
                     padViewModel.updatePresetParameter(it["ppl"]?.toInt()?:4, it["rgn"]?.toInt()?:16, it["bsn"]?.toInt()?:34, it["chan"]?.toInt()?:1)
                 }
