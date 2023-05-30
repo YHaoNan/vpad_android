@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import top.yudoge.vpad.api.CommunicatorHolder
 import top.yudoge.vpad.api.TrackStateEnums
+import top.yudoge.vpad.domain.WorkingPresetDomain
 import top.yudoge.vpad.pojo.Fader
 import top.yudoge.vpad.pojo.FaderMode
 import top.yudoge.vpad.repository.SettingRepository
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class FaderViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val settingRepository: SettingRepository,
+    private val workingPresetDomain: WorkingPresetDomain,
     private val controlMessageViewmodel: ControlMessageViewmodel
 ): ViewModel() {
     private val vPadServer = savedStateHandle.get<VPadServer>(VPAD_SERVER_KEY)!!
@@ -35,9 +37,13 @@ class FaderViewModel @Inject constructor(
     }
     private val trackFaders = MutableLiveData(Constants.DEFAULT_TRACK_FADERS.value)
     val faders: MediatorLiveData<List<Fader>> = MediatorLiveData()
+    val channel: LiveData<Int> = Transformations.map(workingPresetDomain.workingPreset) {
+        it.channel
+    }
     init {
         turnToTrackMode()
     }
+
     fun turnToTrackMode() {
         _trackMode.value = true
         faders.addSource(trackFaders) {

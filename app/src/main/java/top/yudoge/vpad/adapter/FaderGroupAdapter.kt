@@ -23,7 +23,8 @@ import top.yudoge.vpadapi.structure.Message
 class FaderGroupAdapter(
     private val context: Context,
     private val onHasMessageToSend: (Message) -> Unit,
-    private val faderViewModel: FaderViewModel
+    private val faderViewModel: FaderViewModel,
+    private val channel: Int
 ) : RecyclerView.Adapter<FaderGroupAdapter.ViewHolder>() {
 
     private var faders: List<Fader> = listOf()
@@ -80,7 +81,7 @@ class FaderGroupAdapter(
                 }
             }
             // 初始化fader
-            binding.faderBar.initToFader(fader, onHasMessageToSend, faderViewModel)
+            binding.faderBar.initToFader(channel, fader, onHasMessageToSend, faderViewModel)
         }
     }
 }

@@ -53,17 +53,17 @@ fun View.setOnDoubleClickListener(timeInterval: Int = 140, onDoubleClickListener
     }
 }
 
-fun SeekBar.initToFader(fader: Fader, onHasAMessageToSend: (Message) -> Unit, faderViewModel: FaderViewModel) {
+fun SeekBar.initToFader(channel: Int, fader: Fader, onHasAMessageToSend: (Message) -> Unit, faderViewModel: FaderViewModel) {
     // 设置最大值和初始值
     max = 127
     setProgress(fader.value)
 
-    val faderStateChanged = OnFaderStateChanged(fader, onHasAMessageToSend, faderViewModel)
+    val faderStateChanged = OnFaderStateChanged(channel, fader, onHasAMessageToSend, faderViewModel)
 
     setOnSeekBarChangeListener(faderStateChanged)
 }
 
-class OnFaderStateChanged(private val fader: Fader, private val onHasAMessageToSend: (Message) -> Unit, private val faderViewModel: FaderViewModel) : SeekBar.OnSeekBarChangeListener {
+class OnFaderStateChanged(private val channel: Int, private val fader: Fader, private val onHasAMessageToSend: (Message) -> Unit, private val faderViewModel: FaderViewModel) : SeekBar.OnSeekBarChangeListener {
 
     override fun onProgressChanged(
         seekBar: SeekBar?,
@@ -77,7 +77,7 @@ class OnFaderStateChanged(private val fader: Fader, private val onHasAMessageToS
             onHasAMessageToSend(faderViewModel.changeFaderValueMessage(fader.copy(value = progress)))
         } else {
             // Send CC Message
-            onHasAMessageToSend(CCMessage(fader.map, progress))
+            onHasAMessageToSend(CCMessage(fader.map, progress, channel))
         }
     }
 

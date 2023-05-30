@@ -121,8 +121,6 @@ class PadFragment : Fragment() {
         buttonGroupAdapter = ButtonGroupAdapter(padViewModel, viewLifecycleOwner, buttonGroupClickListener)
         binding.buttonGroup.adapter = buttonGroupAdapter
 
-        // 因为之前有考虑过添加调制轮的功能，所以抽取了WheelStateChangeListener
-        binding.wheel.setOnWheelStateChangeListener(PitchWheelWheelStateChangeListener(activityViewModel))
         binding.addPad.setOnClickListener {
             padViewModel.appendPad()
         }
@@ -211,6 +209,8 @@ class PadFragment : Fragment() {
             }
         }
         padViewModel.workingPreset.observe(viewLifecycleOwner) { preset ->
+            // 因为之前有考虑过添加调制轮的功能，所以抽取了WheelStateChangeListener
+            binding.wheel.setOnWheelStateChangeListener(PitchWheelWheelStateChangeListener(activityViewModel,preset.channel))
             val girdLayoutManager = GridLayoutManager(activity, preset.padsPerLine);
             binding.padContainer.layoutManager = girdLayoutManager
             binding.padContainer.adapter = PadContainerAdapter(padThemeInitializer, preset.padSettings, padViewModel.settingMode.value!!, preset.baseNote, padViewModel.showNoteName.value!!) { padSetting, padPosition, event ->

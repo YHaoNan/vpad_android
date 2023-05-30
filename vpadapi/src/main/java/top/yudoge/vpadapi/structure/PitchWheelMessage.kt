@@ -4,7 +4,8 @@ import top.yudoge.vpadapi.Operations
 
 class PitchWheelMessage(
     var pos: Int,
-    var prevPos: Int
+    var prevPos: Int,
+    var channel: Int
 ) : Message() {
 
     init {
@@ -13,13 +14,14 @@ class PitchWheelMessage(
 
     override fun bodyToBytes(): ByteArray {
         return byteArrayOf(
-            pos.toByte(), prevPos.toByte()
+            pos.toByte(), prevPos.toByte(), channel.toByte()
         )
     }
 
     override fun bodyFromBytes(bytes: ByteArray, offset: Int): Int {
         this.pos = bytes[offset].toInt()
         this.prevPos = bytes[offset + 1].toInt()
-        return 2
+        this.channel = bytes[offset + 2].toInt()
+        return 3
     }
 }

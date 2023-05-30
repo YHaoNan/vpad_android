@@ -65,17 +65,19 @@ class FaderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        faderGroupAdapter = FaderGroupAdapter(requireContext(), ::sendMessage, faderViewModel)
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.faderGroup.layoutManager = GridLayoutManager(context, 8)
-        binding.faderGroup.adapter = faderGroupAdapter
+        faderViewModel.channel.observe(viewLifecycleOwner) {
+            faderGroupAdapter = FaderGroupAdapter(requireContext(), ::sendMessage, faderViewModel, it)
+            binding.lifecycleOwner = viewLifecycleOwner
+            binding.faderGroup.layoutManager = GridLayoutManager(context, 8)
+            binding.faderGroup.adapter = faderGroupAdapter
 
-        binding.masterFader.initToFader(
-            Fader(8, 97, FaderMode.Track, 8, "MASTER"),
-            ::sendMessage, faderViewModel
-        )
-        faderViewModel.faders.observe(viewLifecycleOwner) {
-            faderGroupAdapter.setFaders(it)
+            binding.masterFader.initToFader(it,
+                Fader(8, 97, FaderMode.Track, 8, "MASTER"),
+                ::sendMessage, faderViewModel
+            )
+            faderViewModel.faders.observe(viewLifecycleOwner) {
+                faderGroupAdapter.setFaders(it)
+            }
         }
     }
 

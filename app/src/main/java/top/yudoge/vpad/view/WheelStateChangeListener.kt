@@ -10,13 +10,13 @@ interface WheelStateChangeListener {
     fun onFingerOut(seekBar: SeekBar?)
 }
 
-class PitchWheelWheelStateChangeListener(private val vm: MainViewModel) : WheelStateChangeListener {
+class PitchWheelWheelStateChangeListener(private val vm: MainViewModel, val channel: Int) : WheelStateChangeListener {
     companion object {
         private const val MID_POS = 64
     }
     private var prevPos: Int = MID_POS
     override fun onValueChanged(seekBar: SeekBar?, value: Int) {
-        vm.sendMessageToServer(PitchWheelMessage(value, prevPos))
+        vm.sendMessageToServer(PitchWheelMessage(value, prevPos, channel))
         prevPos = value
     }
 
