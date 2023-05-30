@@ -65,7 +65,7 @@ class FaderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        faderGroupAdapter = FaderGroupAdapter(::sendMessage, faderViewModel)
+        faderGroupAdapter = FaderGroupAdapter(requireContext(), ::sendMessage, faderViewModel)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.faderGroup.layoutManager = GridLayoutManager(context, 8)
         binding.faderGroup.adapter = faderGroupAdapter

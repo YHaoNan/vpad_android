@@ -3,10 +3,13 @@ package top.yudoge.vpad.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import top.yudoge.vpad.api.CommunicatorHolder
 import top.yudoge.vpad.api.TrackStateEnums
 import top.yudoge.vpad.pojo.Fader
+import top.yudoge.vpad.pojo.FaderMode
+import top.yudoge.vpad.repository.SettingRepository
 import top.yudoge.vpad.toplevel.Constants
 import top.yudoge.vpadapi.VPadServer
 import top.yudoge.vpadapi.structure.Message
@@ -17,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FaderViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val settingRepository: SettingRepository,
     private val controlMessageViewmodel: ControlMessageViewmodel
 ): ViewModel() {
     private val vPadServer = savedStateHandle.get<VPadServer>(VPAD_SERVER_KEY)!!
@@ -24,16 +28,29 @@ class FaderViewModel @Inject constructor(
     private val _trackMode = MutableLiveData(true)
     val trackMode by ::_trackMode
 
-    private val _faders = MutableLiveData(Constants.DEFAULT_TRACK_FADERS.value)
-    val faders: LiveData<List<Fader>> by ::_faders
-
+    private val ccFaders: LiveData<List<Fader>> = Transformations.map(settingRepository.ccList.asLiveData()) {
+        it.split(",").mapIndexed {i, s ->
+            Fader(i, 97, FaderMode.CC, s.toInt())
+        }
+    }
+    private val trackFaders = MutableLiveData(Constants.DEFAULT_TRACK_FADERS.value)
+    val faders: MediatorLiveData<List<Fader>> = MediatorLiveData()
+    init {
+        turnToTrackMode()
+    }
     fun turnToTrackMode() {
         _trackMode.value = true
-        _faders.value = Constants.DEFAULT_TRACK_FADERS.value
+        faders.addSource(trackFaders) {
+            faders.value = it
+            faders.removeSource(ccFaders)
+        }
     }
     fun turnToCCMode() {
         _trackMode.value = false
-        _faders.value = Constants.DEFAULT_CC_FADERS.value
+        faders.addSource(ccFaders) {
+            faders.value = it
+            faders.removeSource(trackFaders)
+        }
     }
 
     fun faderDownMessage(fader: Fader) = TrackMessage(fader.id + 1, TrackStateEnums.FADER_DOWN.ordinal, 0)
@@ -48,7 +65,15 @@ class FaderViewModel @Inject constructor(
     fun trackBankLeftMessage() = controlMessageViewmodel.bankLeftMessage
     fun trackBankRightMessage() = controlMessageViewmodel.bankRightMessage
 
-
+    fun updateCCFader(fader: Fader) {
+        if (fader.id < 0 || fader.id > 8) return
+        val newCCListStr = ccFaders.value!!.map {
+            if (it.id == fader.id) fader.map else it.map
+        }.joinToString(",")
+        viewModelScope.launch {
+            settingRepository.updateCCList(newCCListStr)
+        }
+    }
     companion object {
         const val TAG = "FaderViewModel"
         const val VPAD_SERVER_KEY = "vPadServer"

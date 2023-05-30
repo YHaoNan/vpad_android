@@ -56,7 +56,7 @@ fun View.setOnDoubleClickListener(timeInterval: Int = 140, onDoubleClickListener
 fun VerticalSeekBar.initToFader(fader: Fader, onHasAMessageToSend: (Message) -> Unit, faderViewModel: FaderViewModel) {
     // 设置最大值和初始值
     max = 127
-    setProgressAndThumb(97)
+    setProgressAndThumb(fader.value)
 
     val faderStateChanged = OnFaderStateChanged(fader, onHasAMessageToSend, faderViewModel)
 

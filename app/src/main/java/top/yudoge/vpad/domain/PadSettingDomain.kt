@@ -118,7 +118,7 @@ class PadSettingDomain @Inject constructor(
                         add(subSetting.type.asSelectItem(CHORD_TYPE, "和弦类别", null))
                         add(subSetting.level.asSelectItem(CHORD_LEVEL, "和弦级数", null))
                         add(subSetting.arpPct.asInputAndButtonItem(CHORD_ARP_PCT, "琶音程度", "控制和弦中不同音的起始延迟", "0~100"))
-                        add(subSetting.transpose.asInputItem(CHORD_TRANSPOSE, "和弦转置", "控制和弦的转置", ""))
+                        add(subSetting.transpose.asInputAndButtonItem(CHORD_TRANSPOSE, "和弦转置", "控制和弦的转置", ""))
                     }
                     PadMode.Pad -> {}
                 }

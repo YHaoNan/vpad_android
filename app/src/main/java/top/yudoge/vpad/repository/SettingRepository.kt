@@ -39,6 +39,10 @@ class SettingRepository @Inject constructor(
             it[WORKING_PRESET_KEY] ?: defaultPreset
         }
 
+    val ccList: Flow<String> = context.dataStore.data
+        .map {
+            it[CC_LIST_KEY] ?: "1,7,10,11,64,65,3,9"
+        }
 
     val bpm: Flow<Int> = context.dataStore.data
         .map {
@@ -56,6 +60,12 @@ class SettingRepository @Inject constructor(
     suspend fun updateWorkingPreset(preset: String) {
         context.dataStore.edit {
             it[WORKING_PRESET_KEY] = preset
+        }
+    }
+
+    suspend fun updateCCList(ccList: String) {
+        context.dataStore.edit {
+            it[CC_LIST_KEY] = ccList
         }
     }
 
@@ -89,6 +99,7 @@ class SettingRepository @Inject constructor(
         private val WORKING_PRESET_KEY = stringPreferencesKey("working_preset")
         private val BPM_KEY = intPreferencesKey("bpm")
         private val SHOW_NOTENAME_KEY = intPreferencesKey("show_note_name")
+        private val CC_LIST_KEY = stringPreferencesKey("cc_list")
         const val TAG = "SettingRepository"
     }
 }
