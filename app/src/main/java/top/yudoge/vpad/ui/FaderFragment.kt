@@ -71,7 +71,7 @@ class FaderFragment : Fragment() {
         binding.faderGroup.adapter = faderGroupAdapter
 
         binding.masterFader.initToFader(
-            Fader(8, 0, FaderMode.Track, 8, "MASTER"),
+            Fader(8, 97, FaderMode.Track, 8, "MASTER"),
             ::sendMessage, faderViewModel
         )
         faderViewModel.faders.observe(viewLifecycleOwner) {
